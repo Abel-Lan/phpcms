@@ -59,7 +59,7 @@ class content extends admin {
 			$workflow_menu = '';
 			$steps = isset($_GET['steps']) ? intval($_GET['steps']) : 0;
 			//工作流权限判断
-			if($_SESSION['roleid']!=1 && $steps && !in_array($steps,$admin_privs)) showmessage(L('permission_to_operate'));
+			//if($_SESSION['roleid']!=1 && $steps && !in_array($steps,$admin_privs)) showmessage(L('permission_to_operate')); // Abel Lan, 2018-1-3, 注释此行,目的:添加工作流后，待审核文章也可修改
 			$this->db->set_model($modelid);
 			if($this->db->table_name==$this->db->db_tablepre) showmessage(L('model_table_not_exists'));;
 			$status = $steps ? $steps : 99;
@@ -97,7 +97,7 @@ class content extends admin {
 			$pages = $this->db->pages;
 			$pc_hash = $_SESSION['pc_hash'];
 			for($i=1;$i<=$workflow_steps;$i++) {
-				if($_SESSION['roleid']!=1 && !in_array($i,$admin_privs)) continue;
+				//if($_SESSION['roleid']!=1 && !in_array($i,$admin_privs)) continue; // Abel Lan, 2018-1-3, 注释此行,目的:添加工作流后，待审核文章也可修改
 				$current = $steps==$i ? 'class=on' : '';
 				$r = $this->db->get_one(array('catid'=>$catid,'status'=>$i));
 				$newimg = $r ? '<img src="'.IMG_PATH.'icon/new.png" style="padding-bottom:2px" onclick="window.location.href=\'?m=content&c=content&a=&menuid='.$_GET['menuid'].'&catid='.$catid.'&steps='.$i.'&pc_hash='.$pc_hash.'\'">' : '';
@@ -130,7 +130,7 @@ class content extends admin {
 				//如果该栏目设置了工作流，那么必须走工作流设定
 				$setting = string2array($category['setting']);
 				$workflowid = $setting['workflowid'];
-				if($workflowid) {
+				if($workflowid && $_POST['status']!=99) {
 					//如果用户是超级管理员，那么则根据自己的设置来发布
 					$_POST['info']['status'] = $_SESSION['roleid']==1 ? intval($_POST['status']) : 1;
 				} else {
@@ -441,11 +441,18 @@ class content extends admin {
 						$inputinfo['system'] = $content_info;
 						$this->db->search_api($id,$inputinfo);
 					}
+					if (isset($content_info) && $content_info) {
+						$this->db->set_model($modelid);// 修复前边函数$html->show()生成静态时，当模板文件调用pc list时将$this->db->tabelname更改
+					}
 				}
 				if(isset($_GET['ajax_preview'])) {
 					$_POST['ids'] = $_GET['id'];
 				}
 				$this->db->status($_POST['ids'],$status);
+				if ($status==99 && (isset($content_info) && $content_info)) {
+					$html->index();
+					if (defined('RELATION_HTML')) $html->create_relation_html($content_info['catid']);
+				}
 		}
 		showmessage(L('operation_success'),HTTP_REFERER);
 	}

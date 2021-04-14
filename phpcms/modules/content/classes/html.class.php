@@ -388,9 +388,14 @@ class html {
 	* @param $catid
 	*/
 	public function create_relation_html($catid) {
-		for($page = 1; $page < 6; $page++) {
+		$page = 1;
+		$pagesize = isset($pagesize) ? $pagesize : 20;
+		do {
 			$this->category($catid,$page);
-		}
+			$page++;
+			$total_number = isset($total_number) ? $total_number : PAGES;
+		} while ($page <= $total_number && $page < $pagesize);
+
 		//检查当前栏目的父栏目，如果存在则生成
 		$arrparentid = $this->categorys[$catid]['arrparentid'];
 		if($arrparentid) {
