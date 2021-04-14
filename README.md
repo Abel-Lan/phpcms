@@ -1,9 +1,24 @@
 # phpcms  
 
+【这是已经安装好的phpcms模板，数据库存放位置：/install/phpcms_db.sql】
+>**数据库名：** phpcms_db<br>
+>**链接数据库用户名：** root<br>
+>**链接数据库密码：** 空
+>
+>后台登陆地址：http://phpcms.com/admin.php<br>
+>后台登陆用户名：admin<br>
+>后台登陆密码：admin123
+>
+>登陆后台可以更改域名网址、密码，傻瓜式操作
+
+<br>【后台界面】
+![](statics/admin_login/images/demo1001.png) 
+
 ##(更新时间：2021-04-13 11:20)
 ##更新
-    1. 修复https的bug
+    1. 修复https的bug，主要修复遗漏的http验证
     2. 修复mysqli连接数据库bug："continue" targeting switch is equivalent to "break". Did you mean to use "continue 2"? | phpcms\libs\classes\db_mysqli.class.php | 245
+    3. 修改后台登陆界面
 
 ##(更新时间：2019-03-21 11:20)
 介绍
@@ -27,13 +42,4 @@
     10.修复利用构造referer的xss攻击<br>
     ......
 
-【这是已经安装好的phpcms模板，数据库存放位置：/install/phpcms_db.sql】
-**数据库名：** phpcms_db
-**用户名：** root
-**密码：** 空
-<br>【最新后台登陆界面】
-![](statics/admin_login/images/phpcms_admin_login_1.jpg) 
-<br>【后台界面】
-![](statics/login/images/demo1001.png) 
-<br>
  

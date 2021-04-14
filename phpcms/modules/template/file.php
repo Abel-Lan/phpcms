@@ -168,7 +168,7 @@ class file extends admin {
 					$url = isset($_POST['url']) && trim($_POST['url']) ? trim($_POST['url']) : showmessage(L('data_address').L('empty'));
 					$cache = isset($_POST['cache']) && trim($_POST['cache']) ? trim($_POST['cache']) : 0;
 					$return = isset($_POST['return']) && trim($_POST['return']) ? trim($_POST['return']) : '';
-					if (!preg_match('/http:\/\//i', $url)) {
+					if (!preg_match('/http(s)?:\/\//i', $url)) {
 						showmessage(L('data_address_reg_sg'), HTTP_REFERER);
 					}
 					$tag_md5_list = tag_md5($filepath);

@@ -40,7 +40,7 @@ div#areaid{border:1px solid #A7A6AA;height:18px;margin:0 5px 0 0;padding:2px 5px
 			{loop $datas $r}
            	<li style="margin:0">
                 {if $r[thumb]}<a href="{$r[url]}" target="_blank"><img height="60" width="60" src="{$r[thumb]}"></a>{/if}
-                <h5><a href="{$r[url]}" target="_blank" class="blue fn">{$r[title]}</a> - <a href="{if strpos($CATEGORYS[$r[catid]][url],'http://')===false}{$siteurl}{$CATEGORYS[$r[catid]][url]}{else}{$CATEGORYS[$r[catid]][url]}{/if}" class="blue f12 fn">{$CATEGORYS[$r[catid]][catname]}</a> - <span class="green f12 fn">发布时间：{date('Y-m-d H:i',$r[updatetime])}</span></h5>
+                <h5><a href="{$r[url]}" target="_blank" class="blue fn">{$r[title]}</a> - <a href="{if strpos($CATEGORYS[$r[catid]][url],'http://')===false && strpos($CATEGORYS[$r[catid]][url],'https://')===false}{$siteurl}{$CATEGORYS[$r[catid]][url]}{else}{$CATEGORYS[$r[catid]][url]}{/if}" class="blue f12 fn">{$CATEGORYS[$r[catid]][catname]}</a> - <span class="green f12 fn">发布时间：{date('Y-m-d H:i',$r[updatetime])}</span></h5>
                 <p>{$r[description]}</p>
 			</li>
 			{/loop}
