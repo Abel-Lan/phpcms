@@ -1,6 +1,6 @@
 # phpcms  
 
-#介绍
+## 介绍
 
 这是已经安装好的phpcms模板
 网站代码存放位置：/phpcms_code
