@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="renderer" content="webkit">
+	<title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+	<meta name="keywords" content="{$SEO['keyword']}">
+	<meta name="description" content="{$SEO['description']}">
+	<meta name="author" content="Abel Lan" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="applicable-device" content="pc,mobile">
+	<link href="{CSS_PATH}table_form.css" rel="stylesheet" type="text/css" />
+	<link href="{CSS_PATH}upload_photo.css" rel="stylesheet" type="text/css" />
+	<link href="{PLUGIN_STATICS_PATH}Mobiscroll/css/mobiscroll.custom-3.0.0-beta6.min.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="{JS_PATH}jquery.min.js"></script>
+</head>
+<div class="wrap">
+	<div class="col-left">
+        <div id="Article">
+        	<h1 class="article-title">上传照片--记录成长点滴</h1>
+			<p class="content-detail">
+				上传后请耐心等待，审核通过后方能看到。<br />
+				<!--<a id="view-photo-wall-" href="/index.php?m=content&c=index&a=lists&catid=6" target="_blank" title="照片墙">点击查看相册</a>-->
+			</p>
+			<div class="content">
+				<form method="post" enctype="multipart/form-data" action="?m=formguide&c=index&a=show&formid={$formid}&siteid=<?php echo $this->siteid;?>" name="myform" id="myform">
+<table class="table_form" width="100%" align="center" cellspacing="0">
+<tbody>
+ {loop $forminfos_data $field $info}
+ 	{if $field != 'status'}
+ 	{if $field == 'img_address'}
+	<tr>
+	 <th><font color="red">*</font> 选择照片</th>
+	 <td>
+		 <div id="upload_img_mobile">
+			 <div class="upload_box">
+				 <input class="upload_file" name="img_address" id="img_address" required="required" onchange="AbelZepto(this,this.files[0])" type="file" accept="image/*">
+				 <p><img id="img_compress" src="" alt=""></p>
+				 <canvas></canvas>
+			 </div>
+		 </div>
+		 <div id="upload_img_pc">
+		 	<input class="upload_file input-text" name="img_address" id="img_address_pc" required="required" type="file" accept="image/*">
+		 </div>
+	 </td>
+	</tr>
+	{elseif $field == 'date'}
+	<tr>
+	 <th><font color="red">*</font> 拍照日期</th>
+	 <td>
+		 <input type="date" name="info[date]" id="date" required="required" class="date" value="" placeholder="请选择..." size="10">
+	 </td>
+	</tr>
+	{elseif $field == 'describle'}
+	<tr>
+	 <th><font color="red">*</font> 图片描述</th>
+	 <td>
+		 <input type="text" name="info[describle]" id="describle" required="required" pattern="([\u4e00-\u9fa5]|[a-zA-Z]|[0-9])([\S]){1,125}" maxlength="125" size="" value="" placeholder="至少2个字符" class="input-text">
+	 </td>
+	</tr>
+	{else}
+	{if $info['formtype']=='omnipotent'}
+		{loop $forminfos_data $_fm $_fm_value}
+			{if $_fm_value['iscomnipotent']}
+				{php $info['form'] = str_replace('{'.$_fm.'}',$_fm_value['form'],$info['form']);}
+			{/if}
+		{/loop}
+	{/if}
+	<tr>
+      <th>{if $info['star']} <font color="red">*</font>{/if} {$info['name']}
+	  </th>
+		{php if($info['star']){$info['form'] = str_replace('name=','required="required" name=',$info['form']);}}
+      <td>{$info['form']}  {$info['tips']}</td>
+    </tr>
+    {/if}
+ 	{/if}
+{/loop}
+	 <tr>
+		 <td colspan="2" class="last-td">
+			 <input type="hidden" name="token" value="{$_SESSION['token']}">
+			 <input type="submit" name="dosubmit" id="dosubmit" formnovalidate="formnovalidate" class="form-btn btn-submit" value=" 上传 ">&nbsp;
+			 <!--<input type="reset" class="form-btn btn-submit btn-cancle" value=" 取消 ">-->
+			 <a id="view-photo-wall" class="form-btn " href="/index.php?m=content&c=index&a=lists&catid=6" target="_blank">查看相册</a>
+		 </td>
+	 </tr>
+	</tbody>
+</table>
+</form>
+			</div>
+      </div>
+  </div>
+</div>
+
+{template "content","footer"}
+
+<script type="text/javascript" src="{PLUGIN_STATICS_PATH}photo_wall/js/jquery.min.js"></script>
+<script type="text/javascript">
+	jQuery.fn.extend({
+		live: function (event, callback) {
+			if (this.selector) {
+				jQuery(document).on(event, this.selector, callback);
+			}
+		}
+	});
+	jQuery.browser = {};
+	(function () {
+		jQuery.browser.msie = false;
+		jQuery.browser.version = 0;
+		if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+			jQuery.browser.msie = true;
+			jQuery.browser.version = RegExp.$1;
+		}
+	})();
+</script>
+
+<script type="text/javascript" src="{PLUGIN_STATICS_PATH}Mobiscroll/js/mobiscroll.custom-3.0.0-beta6.min.js"></script>
+<script type="text/javascript">
+var isIE = function(ver){
+	var b = document.createElement('b');
+	b.innerHTML = '<!--[if IE ' + ver + ']><i></i><![endif]-->';
+	return b.getElementsByTagName('i').length === 1;
+};
+$(function () {
+	if ($(window).width() > 720) {
+		$('#upload_img_mobile').html('');
+	}else{
+		$('#upload_img_mobile').show();
+		$('#upload_img_pc').html('');
+	}
+
+	var now = new Date(),
+			min = new Date(now.getFullYear() - 60, now.getMonth(), now.getDate()),
+			max = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+	var ie = isIE();
+	if(ie !== true) {
+		$('#date').mobiscroll().calendar({
+			theme: 'material',
+			lang: 'zh',
+			display: 'center',
+			dateFormat : 'yy-mm-dd',
+			min: min,
+			max: max
+		});
+	}
+	$('#date').removeAttr('readonly');
+});
+</script>
+<script type="text/javascript" src="{PLUGIN_STATICS_PATH}photo_wall/js/zepto.min.js"></script>
+<script type="text/javascript" src="{PLUGIN_STATICS_PATH}photo_wall/js/zepto.js"></script>
+</body>
+</html>
