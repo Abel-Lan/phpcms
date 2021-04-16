@@ -1,0 +1,100 @@
+/*Power By Abel Lan(QQ 1027758988), date:2017-8-30*/
+.footer{text-align: center;margin-top: 50px;border-top: 1px solid #ccc;padding-top: 10px;}
+table.DynarchCalendar-titleCont,table{margin: 0 auto;}
+h1.article-title{text-align:center}
+.content-detail{text-align: center;font-size: 1.3rem;line-height: 2;}
+a:visited{color:#444;}
+.table_form,label{font-size: 1.3rem;}
+.table_form td, .table_form th {padding: 8px 0 8px 8px;}
+.table_form tbody th{width: 35%;color:#444;}
+.table_form tbody td{width: 65%;}
+.table_form tbody td.last-td{border-bottom: 0;text-align: center;}
+.table_form td label{margin-right: 10px;}
+input.date,input.input-text {height: 42px;line-height: 42px;border: 1px solid #ccc;box-shadow: 0 2px 2px -2px #DDD inset;box-sizing: border-box;outline: none;color: #000;padding-left: 10px;font-size: 16px;}
+input.date, input.endDate {background: none;padding-right: 5px;}
+input#describle{width: 80%;}
+.form-btn{height: 45px;line-height: 45px;border: 1px solid #ccc;cursor: pointer;color: #333;background-color: #e3e3e3;display: inline-block;font-weight: 600;text-align: center;white-space: nowrap;vertical-align: middle;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;padding: 0 33px;font-size: 1.25rem;border-radius: .25rem;transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;}
+.form-btn:hover{border-color:#e0e0e0;background-color: #e0e0e0;}
+.btn-submit{margin-right: 20px;}
+#view-photo-wall{background: #2572e6;color:#fff;}
+@media screen and (max-width: 720px){
+    .content img {width: auto;height: auto;}
+    .table_form tbody th{width: 28%;}
+    .table_form tbody td{width: 72%;}
+    input#describle, input.input-text{width: 90%;}
+
+    div.showMsg{width:90%;max-width:458px;height: auto;position: relative;top:0;left: 0;margin: 100px auto 0 auto;}
+    div.showMsg .content.guery a.form-btn{padding: 0 1.75rem;}
+}
+@media screen and (max-width: 320px){
+    .table_form tbody th{width: 29%;}
+    .table_form tbody td{width: 71%;}
+    .table_form th {padding: 8px 5px 8px 0;}
+    input#describle, input.input-text{width: 95%;}
+    div.showMsg{width:95%;}
+}
+#upload_img_mobile{display: none;}
+/*上传成功提示页面*/
+div.showMsg{height: auto;}
+div.showMsg .content.guery{height: auto;background:none;padding: 30px 0 20px 0;}
+div.showMsg .content.guery #continue-add{margin-right: 9px;}
+
+.upload_box{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    overflow: hidden;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+.upload_box:after{
+    background: url(../images/icon/upload-pic.png) no-repeat center;
+    content: ' ';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+}
+.upload_box.change:after{
+    background: none;
+}
+.upload_box .upload_file{
+    -webkit-appearance: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+.upload_box.change p{
+    margin: 0;
+    z-index: 1;
+    height: 200px;
+    line-height: 200px;
+}
+/* 兼容标准浏览器 */
+.upload_box.change p:before{
+    content:".";  /* 具体的值与垂直居中无关，尽可能的节省字符 */
+    margin-left:-5px; font-size:10px;  /* 修复居中的小BUG */
+    visibility:hidden;  /*设置成隐藏元素*/
+}
+.upload_box img{
+    display: none;
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle;
+}
+.upload_box canvas{
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}

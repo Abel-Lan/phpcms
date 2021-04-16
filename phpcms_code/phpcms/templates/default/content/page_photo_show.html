@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths">
+<!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{else}照片墙{/if} - {$SEO['site_title']}</title>
+    <meta name="keywords" content="{$SEO['keyword']}">
+    <meta name="description" content="{$SEO['description']}">
+    <meta name="author" content="Abel Lan" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="applicable-device" content="pc,mobile">
+
+    <style type="text/css">
+        .footer{text-align: center;margin-top: 30px;border-top: 1px solid #ccc;padding-top: 10px;}
+    </style>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="{PLUGIN_STATICS_PATH}photo_wall/css/animate.css">
+    <!-- Magnific Popup -->
+    <link rel="stylesheet" href="{PLUGIN_STATICS_PATH}photo_wall/css/magnific-popup.css">
+    <!-- Salvattore -->
+    <link rel="stylesheet" href="{PLUGIN_STATICS_PATH}photo_wall/css/salvattore.css">
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="{PLUGIN_STATICS_PATH}photo_wall/css/photo-wall-style.css">
+    <!-- Modernizr JS -->
+    <script src="{PLUGIN_STATICS_PATH}photo_wall/js/modernizr-2.6.2.min.js"></script>
+    <!-- FOR IE9 below -->
+    <!--[if lt IE 9]>
+    <script src="{PLUGIN_STATICS_PATH}photo_wall/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="photos">
+<div class="wrap">
+    <div id="fh5co-main">
+        <div class="container">
+            <div class="row">
+                <div id="photo-wall-first">
+                    <h1 id="photo-wall-title" class="contact-title">一张照片、一段历史、一个故事</h1>
+                    <a id="upload-photo-wall" class="form-btn" href="/index.php?m=formguide&c=index&a=show&formid=12&siteid=1" target="_self">点击上传</a>
+                </div>
+                <div id="fh5co-board" data-columns>
+                    {pc:get sql="SELECT * FROM v9_form_photos WHERE status = 1 ORDER BY date ASC" num="40" page="$page" return="data"}
+                    {loop $data $r}
+                    <div class="item">
+                        <div class="animate-box">
+                            <a href="{$r[img_address]}" class="image-popup fh5co-board-img" title="【{$r[date]}】{$r[describle]}">
+                                <img src="{$r[img_address]}" alt="{$r[describle]}">
+                            </a>
+                        </div>
+                        <div class="fh5co-desc">【{$r[date]}】<br />{$r[describle]}</div>
+                    </div>
+                    {/loop}{/pc}
+                </div>
+                <div class="more wrap"><div id="pages" class="text-c">{$pages}</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cls"></div>
+<!-- jQuery -->
+<script src="{PLUGIN_STATICS_PATH}photo_wall/js/jquery.min.js"></script>
+<script type="text/javascript">
+    jQuery.fn.extend({
+        live: function (event, callback) {
+            if (this.selector) {
+                jQuery(document).on(event, this.selector, callback);
+            }
+        }
+    });
+    jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+    })();
+</script>
+{template "content","footer"}
+<!-- jQuery Easing -->
+<script src="{PLUGIN_STATICS_PATH}photo_wall/js/jquery.easing.1.3.js"></script>
+<!-- Bootstrap -->
+<script src="{PLUGIN_STATICS_PATH}photo_wall/js/bootstrap.min.js"></script>
+<!-- Waypoints -->
+<script src="{PLUGIN_STATICS_PATH}photo_wall/js/jquery.waypoints.min.js"></script>
+<!-- Magnific Popup -->
+<script src="{PLUGIN_STATICS_PATH}photo_wall/js/jquery.magnific-popup.min.js"></script>
+<!-- Salvattore -->
+<script src="{PLUGIN_STATICS_PATH}photo_wall/js/salvattore.min.js"></script>
+<!-- Main JS -->
+<script src="{PLUGIN_STATICS_PATH}photo_wall/js/main.js"></script>
+</body>
+</html>
