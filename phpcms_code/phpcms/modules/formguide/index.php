@@ -8,7 +8,7 @@ class index {
 		$this->db = pc_base::load_model('sitemodel_model');
 		$this->m_db = pc_base::load_model('sitemodel_field_model');
 		$this->M = new_html_special_chars(getcache('formguide', 'commons'));
-		$this->siteid = intval($_GET[siteid]) ? intval($_GET[siteid]) : get_siteid();
+		$this->siteid = intval($_GET['siteid']) ? intval($_GET['siteid']) : get_siteid();
 		$this->M = $this->M[$this->siteid];
 	}
 	
@@ -31,6 +31,7 @@ class index {
 	 * 表单展示
 	 */
 	public function show() {
+		$CATEGORYS = getcache('category_content_'.$this->siteid,'commons');// Abel Lan add 2017-9-1,表单向导无法显示部分菜单
 		if (!isset($_GET['formid']) || empty($_GET['formid'])) {
 			$_GET['action'] ? exit : showmessage(L('form_no_exist'), HTTP_REFERER);
 		}
@@ -49,13 +50,33 @@ class index {
 		$userid = param::get_cookie('_userid');
 		if ($setting['allowunreg']==0 && !$userid && $_GET['action']!='js') showmessage(L('please_login_in'), APP_PATH.'index.php?m=member&c=index&a=login&forward='.urlencode(HTTP_REFERER));
 		if (isset($_POST['dosubmit'])) {
-			$tablename = 'form_'.$r['tablename'];
+			$tablename = 'form_' . $r['tablename'];
 			$this->m_db->change_table($tablename);
-			
+
 			$data = array();
-			require CACHE_MODEL_PATH.'formguide_input.class.php';
+			require CACHE_MODEL_PATH . 'formguide_input.class.php';
 			$formguide_input = new formguide_input($formid);
 			$data = new_addslashes($_POST['info']);
+			/*
+			 * 修改者：Abel Lan
+			 * 修改日期：2017-8-28
+			 * 修改目的：直接通过input提交保存图片
+			 * 修改编号：post-img-save-001
+			 * */
+			//post-img-save-001添加内容开始
+			if ($formid == 12){
+				$session_storage = 'session_'.pc_base::load_config('system','session_storage');
+				pc_base::load_sys_class($session_storage);
+				session_start();
+				if(isset($_POST['token']) && $_POST['token'] != $_SESSION['token'])
+					showmessage('非法提交或请勿重复提交',HTTP_REFERER);
+				$upload_dir = 'PhotosWall/';
+				$img_result = $this->upload('img_address', 'member', 0, $upload_dir);
+				$upload_url = pc_base::load_config('system','upload_url');
+				$data['img_address'] = $upload_url . $img_result;
+			}
+			//post-img-save-001添加内容结束
+
 			$data = new_html_special_chars($data);
 			$data = $formguide_input->get($data);
 			$data['userid'] = $userid;
@@ -75,8 +96,40 @@ class index {
 				}
 				$this->db->update(array('items'=>'+=1'), array('modelid'=>$formid, 'siteid'=>$this->siteid));
 			}
-			showmessage(L('thanks'), APP_PATH);
+			/*
+			 * 修改者：Abel Lan
+			 * 修改日期：2017-8-28
+			 * 修改目的：上传成功后跳转提示页面修改
+			 * 修改编号：form-12-redirect-fix-001
+			 * */
+			//showmessage(L('thanks'),HTTP_REFERER); //form-34-redirect-fix-001修改前
+			//form-12-redirect-fix-001添加内容开始
+			$msg = L('thanks').'<br />您的图片已经上传成功，请耐心等待审核。';
+			$msg .= '<br /><br /><link href="'.APP_PATH.'/statics/css/upload_photo.css" rel="stylesheet" type="text/css">';
+			$msg .= '<a id="continue-add" class="form-btn" href="'.HTTP_REFERER.'" target="_self">继续添加</a>';
+			$msg .= '<a id="view-photo-wall" class="form-btn" href="/index.php?m=content&c=index&a=lists&catid=6" target="_blank">查看照片墙</a>';
+			if($formid == 12){
+				$_SESSION['token'] = '';
+				showmessage($msg, '/index.php?m=content&c=index&a=lists&catid=6', 5000);
+			}else{
+				showmessage(L('thanks'),HTTP_REFERER);
+			}
+			//form-12-redirect-fix-001添加内容开始
 		} else {
+			/*
+			 * 修改者：Abel Lan
+			 * 修改日期：2017-9-7
+			 * 修改目的：添加表单验证token
+			 * 修改编号：form-add-token-001
+			 * */
+			//form-add-token-001添加内容开始
+			$session_storage = 'session_'.pc_base::load_config('system','session_storage');
+			pc_base::load_sys_class($session_storage);
+			session_start();
+			$str_rand = random(6,'abcdefghigklmnopqrstuvwxwyABCDEFGHIGKLMNOPQRSTUVWXWY0123456789');
+			$_SESSION['token'] = md5(microtime(true) . $str_rand);
+			//form-add-token-001添加内容结束
+
 			if ($setting['allowunreg']==0 && !$userid && $_GET['action']=='js') {
 				$no_allowed = 1;
 			}
@@ -110,6 +163,34 @@ class index {
 				ob_clean();
 				exit(format_js($data));
 			}
+		}
+	}
+	/**
+	 * 修改者：Abel Lan
+	 * 修改日期：2017-8-28
+	 * 修改目的：上传附件直接保存
+	 */
+	public function upload($field='upload',$module='member',$catid=0,$upload_dir = '') {
+		pc_base::load_sys_class('attachment','',0);
+		$siteid = $this->siteid;
+		$site_allowext = 'jpg|jpeg|bmp|png|gif';
+		$site_allowmaxsize = 10*1024*1024;
+		$attachment = new attachment($module,$catid,$siteid,$upload_dir);
+		$attachment->set_userid($this->userid);
+		$a = $attachment->upload($field,$site_allowext,$site_allowmaxsize,'',array(0,0));
+		if($a){
+			$filepath = $attachment->uploadedfiles[0]['filepath'];
+			$upload_root = pc_base::load_config('system','upload_path');
+			$filename = $upload_root . $filepath;
+			pc_base::load_sys_class('image','','0');
+			$image = new image(1,$this->siteid);
+			$image->thumb($filename,$filename,1000,651);
+			$att_db = pc_base::load_model('attachment_model');
+			$filesize = filesize($filename);
+			$att_db->update(array('filesize' => $filesize), array('aid' => $a[0]));
+			return $filepath;
+		}else{
+			showmessage($attachment->error(), HTTP_REFERER);
 		}
 	}
 }

@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 本地-邓
+Source Server         : localhost
 Source Server Version : 50553
 Source Host           : localhost:3306
-Source Database       : adminv9
+Source Database       : phpcms_db
 
 Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-03-21 01:02:48
+Date: 2021-03-21 01:02:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -324,6 +324,7 @@ INSERT INTO `v9_category` VALUES ('2', '1', 'content', '1', '0', '1', '0,1', '0'
 INSERT INTO `v9_category` VALUES ('3', '1', 'content', '1', '0', '1', '0,1', '0', '3', '联系方式', '', '', '', 'about/', 'contactus', '/html/about/contactus/', '0', '0', 'array (\n  \'ishtml\' => \'1\',\n  \'template_list\' => \'default\',\n  \'page_template\' => \'page\',\n  \'meta_title\' => \'联系方式\',\n  \'meta_keywords\' => \'联系方式\',\n  \'meta_description\' => \'联系方式\',\n  \'category_ruleid\' => \'1\',\n  \'show_ruleid\' => \'\',\n  \'repeatchargedays\' => \'1\',\n)', '2', '1', '0', 'lianxifangshi', '');
 INSERT INTO `v9_category` VALUES ('4', '1', 'content', '1', '0', '1', '0,1', '0', '4', '版权声明', '', '', '', 'about/', 'copyright', 'http://test.phpcms.cn/index.php?m=content&c=index&a=lists&catid=4', '0', '0', 'array (\n  \'ishtml\' => \'0\',\n  \'template_list\' => \'default\',\n  \'page_template\' => \'page\',\n  \'meta_title\' => \'版权声明\',\n  \'meta_keywords\' => \'版权声明\',\n  \'meta_description\' => \'版权声明\',\n  \'category_ruleid\' => \'6\',\n  \'show_ruleid\' => \'\',\n  \'repeatchargedays\' => \'1\',\n)', '3', '1', '0', 'banquanshengming', '');
 INSERT INTO `v9_category` VALUES ('5', '1', 'content', '1', '0', '1', '0,1', '0', '5', '招聘信息', '', '', '', 'about/', 'hr', '/html/about/hr/', '0', '0', 'array (\n  \'ishtml\' => \'1\',\n  \'template_list\' => \'default\',\n  \'page_template\' => \'page\',\n  \'meta_title\' => \'\',\n  \'meta_keywords\' => \'\',\n  \'meta_description\' => \'\',\n  \'category_ruleid\' => \'1\',\n  \'show_ruleid\' => \'\',\n  \'repeatchargedays\' => \'1\',\n)', '4', '1', '0', 'zhaopinxinxi', '');
+INSERT INTO `v9_category` VALUES ('6', '1', 'content', 1, 0, 1, '0,1', 0, '6', '相册-照片墙', '', '', '', 'about/', 'photos', '/index.php?m=content&c=index&a=lists&catid=6', 0, 0, '{\"ishtml\":\"0\",\"template_list\":\"default\",\"page_template\":\"page_photo_show\",\"meta_title\":\"照片墙\",\"meta_keywords\":\"照片墙\",\"meta_description\":\"照片墙\",\"category_ruleid\":\"6\",\"show_ruleid\":\"\",\"repeatchargedays\":\"1\"}', 6, 1, 0, 'xiangce', '');
 
 -- ----------------------------
 -- Table structure for v9_category_priv
@@ -4864,6 +4865,7 @@ INSERT INTO `v9_model` VALUES ('2', '1', '下载模型', '', 'download', '', '0'
 INSERT INTO `v9_model` VALUES ('3', '1', '图片模型', '', 'picture', '', '0', '0', '1', '0', 'default', 'category_picture', 'list_picture', 'show_picture', '', '', '', '', '0', '0');
 INSERT INTO `v9_model` VALUES ('10', '1', '普通会员', '普通会员', 'member_detail', '', '0', '0', '1', '0', '', '', '', '', '', '', '', '', '0', '2');
 INSERT INTO `v9_model` VALUES ('11', '1', '视频模型', '', 'video', '', '0', '0', '1', '0', 'default', 'category_video', 'list_video', 'show_video', '', '', '', '', '0', '0');
+INSERT INTO `v9_model` VALUES ('12', '1', '照片墙', '', 'photos', '{\"enabletime\":\"0\",\"starttime\":\"1504108800\",\"endtime\":\"\",\"sendmail\":\"0\",\"mails\":\"\",\"allowmultisubmit\":\"1\",\"allowunreg\":\"1\"}', '1504108800', '0', '1', '0', 'default', '', '', 'show_upload_photo', 'show_js', '', '', '', '0', '3');
 
 -- ----------------------------
 -- Table structure for v9_model_field
@@ -5006,6 +5008,11 @@ INSERT INTO `v9_model_field` VALUES ('104', '11', '1', 'islink', '转向链接',
 INSERT INTO `v9_model_field` VALUES ('105', '11', '1', 'video', '视频上传', '', '', '0', '0', '', '', 'video', 'array (\n  \'upload_allowext\' => \'flv|rm|mp4|rmv\',\n)', '', '', '', '0', '0', '0', '1', '0', '1', '0', '0', '8', '0', '0');
 INSERT INTO `v9_model_field` VALUES ('106', '11', '1', 'vision', '画质', '', '', '0', '0', '', '', 'box', 'array (\n  \'options\' => \'高清|1\r\n普通|2\',\n  \'boxtype\' => \'select\',\n  \'fieldtype\' => \'varchar\',\n  \'minnumber\' => \'1\',\n  \'width\' => \'80\',\n  \'size\' => \'1\',\n  \'defaultvalue\' => \'0\',\n  \'outputtype\' => \'1\',\n  \'filtertype\' => \'1\',\n)', '', '', '', '0', '1', '0', '1', '0', '1', '0', '0', '9', '0', '0');
 INSERT INTO `v9_model_field` VALUES ('107', '11', '1', 'video_category', '视频分类', '', '', '0', '0', '', '', 'box', 'array (\n  \'options\' => \'喜剧|1\r\n爱情|2\r\n科幻|3\r\n剧情|4\r\n动作|5\r\n伦理|6\',\n  \'boxtype\' => \'select\',\n  \'fieldtype\' => \'varchar\',\n  \'minnumber\' => \'1\',\n  \'width\' => \'80\',\n  \'size\' => \'1\',\n  \'defaultvalue\' => \'1\',\n  \'outputtype\' => \'1\',\n  \'filtertype\' => \'1\',\n)', '', '', '', '0', '1', '0', '1', '0', '1', '0', '0', '9', '0', '0');
+INSERT INTO `v9_model_field` VALUES ('111', '12', '1', 'uploader', '上传者', '', '', '0', '0', '', '', 'text', '{\"size\":\"22\",\"defaultvalue\":\"\",\"ispassword\":\"0\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '3', '0', '0');
+INSERT INTO `v9_model_field` VALUES ('108', '12', '1', 'date', '拍照日期', '', '', '1', '0', '', '', 'datetime', '{\"fieldtype\":\"date\",\"format\":\"Y-m-d H:i:s\",\"defaulttype\":\"0\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '2', '0', '0');
+INSERT INTO `v9_model_field` VALUES ('109', '12', '1', 'describle', '图片描述', '', '', '1', '0', '', '', 'text', '{\"size\":\"\",\"defaultvalue\":\"\",\"ispassword\":\"0\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '4', '0', '0');
+INSERT INTO `v9_model_field` VALUES ('110', '12', '1', 'status', '审核状态', '', '', '0', '0', '', '', 'box', '{\"options\":\"\\u5ba1\\u6838\\u4e2d|0\\r\\n\\u5ba1\\u6838\\u901a\\u8fc7|1\",\"boxtype\":\"radio\",\"fieldtype\":\"tinyint\",\"minnumber\":\"1\",\"cols\":\"2\",\"width\":\"80\",\"size\":\"1\",\"defaultvalue\":\"0\"}', '', '8', '', '0', '0', '0', '0', '0', '0', '0', '0', '5', '0', '0');
+INSERT INTO `v9_model_field` VALUES ('112', '12', '1', 'img_address', '图片地址', '', '', '1', '0', '', '', 'image', '{\"size\":\"\",\"defaultvalue\":\"\",\"show_type\":\"1\",\"upload_maxsize\":\"2048\",\"upload_allowext\":\"jpg|jpeg|png|bmp\",\"isselectimage\":\"0\",\"images_width\":\"\",\"images_height\":\"\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0');
 
 -- ----------------------------
 -- Table structure for v9_module
@@ -5251,6 +5258,24 @@ CREATE TABLE `v9_pay_spend` (
 -- ----------------------------
 -- Records of v9_pay_spend
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for v9_form_photos
+-- ----------------------------
+DROP TABLE IF EXISTS `v9_form_photos`;
+CREATE TABLE `v9_form_photos` (
+  `dataid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `userid` mediumint(8) unsigned NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `datetime` int(10) unsigned NOT NULL,
+  `ip` char(15) NOT NULL,
+  `img_address` varchar(255) NOT NULL DEFAULT '',
+  `date` date DEFAULT NULL,
+  `describle` varchar(255) NOT NULL DEFAULT '',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `uploader` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`dataid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for v9_picture
