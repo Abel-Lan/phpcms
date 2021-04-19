@@ -1,0 +1,1776 @@
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/fields.inc.php	(date 1618384967000)
++++ phpcms_code/phpcms/modules/content/fields/fields.inc.php	(date 1618385775000)
+@@ -21,9 +21,11 @@
+ 				'readpoint'=>'积分、点数',
+ 				'linkage'=>'联动菜单',
+ 				'downfile'=>'镜像下载',
++				'file'=>'文件上传',
+ 				'downfiles'=>'多文件上传',
+ 				'map'=>'地图字段',
+ 				'omnipotent'=>'万能字段',
++				'linkfield'=>'关联字段',
+ 				'video'=>'视频库',
+ 				);
+ //不允许删除的字段，这些字段讲不会在字段添加处显示
+Index: phpcms_code/phpcms/modules/content/fields/file/config.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/file/config.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/file/config.inc.php	(date 1618385775000)
+@@ -0,0 +1,12 @@
++<?php
++defined('IN_ADMIN') or exit('No permission resources.');
++
++$field_type				= 'varchar'; //字段数据库类型	
++$field_basic_table		= 0; //是否允许作为主表字段
++$field_allow_index		= 0; //是否允许建立索引
++$field_minlength		= 0; //字符长度默认最小值
++$field_maxlength		= ''; //字符长度默认最大值
++$field_allow_search		= 0; //作为搜索条件
++$field_allow_fulltext	= 0; //作为全站搜索信息
++$field_allow_isunique	= 0; //是否允许值唯一
++?>
+\ No newline at end of file
+Index: phpcms_code/phpcms/modules/content/fields/file/field_add_form.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/file/field_add_form.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/file/field_add_form.inc.php	(date 1618385775000)
+@@ -0,0 +1,20 @@
++
++<table cellpadding="2" cellspacing="1" width="98%">
++	<tr> 
++      <td width="100">文本框长度</td>
++      <td><input type="text" name="setting[size]"  size="10" class="input-text" value="70"></td>
++    </tr>
++	<tr> 
++      <td>默认值</td>
++      <td><input type="text" name="setting[defaultvalue]"  size="40" class="input-text"></td>
++    </tr>
++	<tr> 
++      <td>允许上传的文件类型</td>
++      <td><input type="text" name="setting[upload_allowext]" value="pdf|doc|docx|xls|wps|rar|zip|7z|jpg|jpeg|png|bmp" size="60" class="input-text"></td>
++    </tr>
++	<tr> 
++      <td>是否从已上传中选择</td>
++      <td><input type="radio" name="setting[isselectfile]" value="1" checked> 是 <input type="radio" name="setting[isselectimage]" value="0" > 否</td>
++    </tr>
++
++</table>
+\ No newline at end of file
+Index: phpcms_code/phpcms/modules/content/fields/file/field_edit_form.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/file/field_edit_form.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/file/field_edit_form.inc.php	(date 1618385775000)
+@@ -0,0 +1,19 @@
++<table cellpadding="2" cellspacing="1" width="98%">
++	<tr> 
++      <td width="100">文本框长度</td>
++      <td><input type="text" name="setting[size]" value="<?php echo $setting['size'];?>" size="10" class="input-text"></td>
++    </tr>
++	<tr> 
++      <td>默认值</td>
++      <td><input type="text" name="setting[defaultvalue]" value="<?php echo $setting['defaultvalue'];?>" size="40" class="input-text"></td>
++    </tr>
++	<tr> 
++      <td>允许上传的文件类型</td>
++      <td><input type="text" name="setting[upload_allowext]" value="<?php echo $setting['upload_allowext'];?>" size="40" class="input-text"></td>
++    </tr>
++	<tr> 
++      <td>是否从已上传中选择</td>
++      <td><input type="radio" name="setting[isselectimage]" value="1" <?php if($setting['isselectimage']) echo 'checked';?>> 是 <input type="radio" name="setting[isselectimage]" value="0" <?php if(!$setting['isselectimage']) echo 'checked';?>> 否</td>
++    </tr>
++	
++</table>
+\ No newline at end of file
+Index: phpcms_code/phpcms/modules/content/fields/file/form.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/file/form.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/file/form.inc.php	(date 1618385775000)
+@@ -0,0 +1,26 @@
++	function file($field, $value, $fieldinfo) {
++		$list_str = $str = '';
++		extract(string2array($fieldinfo['setting']));
++		if($value){
++			$value_arr = explode('|',$value);
++			$value = $value_arr['0'];
++			$sel_server = $value_arr['1'] ? explode(',',$value_arr['1']) : '';
++			$edit = 1;
++		} else {
++			$edit = 0;
++		}
++		
++	
++		
++		if(!defined('IMAGES_INIT')) {
++			$str = '<script type="text/javascript" src="'.JS_PATH.'swfupload/swf2ckeditor.js"></script>';
++			define('IMAGES_INIT', 1);
++		}	
++
++
++		$authkey = upload_key("$upload_number,$upload_allowext,$isselectimage");	
++		$string .= $str."<input type='text' name='info[$field]' id='$field' value='$value' class='input-text' size='$size' />  <input type='button' class='button' onclick=\"javascript:flashupload('{$field}_downfield', '".L('attachment_upload')."','{$field}',submit_attachment,'{$upload_number},{$upload_allowext},{$isselectimage}','content','$this->catid','{$authkey}')\"/ value='".L('attachment_upload')."'>";
++
++
++		return $string;
++	}
+Index: phpcms_code/phpcms/modules/content/fields/file/input.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/file/input.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/file/input.inc.php	(date 1618385775000)
+@@ -0,0 +1,3 @@
++	function file($field, $value) {
++		return trim($value);
++	}
+Index: phpcms_code/phpcms/modules/content/fields/linkfield/config.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/linkfield/config.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/linkfield/config.inc.php	(date 1618385775000)
+@@ -0,0 +1,19 @@
++<?php
++/**
++ *  linkfield 获取数据表关联字段及数据功能
++ *
++ * @contact			    qq:1027758988
++ * @author              Abel Lan
++ * @lastmodify			2017-9-28
++ */
++defined('IN_ADMIN') or exit('No permission resources.');
++
++$field_type				= 'varchar'; //字段数据库类型
++$field_basic_table		= 1; //是否允许作为主表字段
++$field_allow_index		= 1; //是否允许建立索引
++$field_minlength		= 0; //字符长度默认最小值
++$field_maxlength		= ''; //字符长度默认最大值
++$field_allow_search		= 1; //作为搜索条件
++$field_allow_fulltext	= 1; //作为全站搜索信息
++$field_allow_isunique	= 1; //是否允许值唯一
++?>
+\ No newline at end of file
+Index: phpcms_code/phpcms/modules/content/fields/linkfield/field_add_form.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/linkfield/field_add_form.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/linkfield/field_add_form.inc.php	(date 1618385775000)
+@@ -0,0 +1,152 @@
++<?php
++pc_base::load_sys_class('db_factory');
++$database = pc_base::load_config('database');
++$pdo_name = 'default';
++$db = db_factory::get_instance($database)->get_database($pdo_name);
++$tbl_show = $db->query("SHOW TABLE STATUS FROM `".$database[$pdo_name]['database']."`");
++$web_tables = array();
++$web_tables_info = array();
++$pre = $database[$pdo_name]['tablepre'];
++//排除系统关键信息数据表
++$sys_tables = array($pre.'admin', $pre.'admin_panel', $pre.'admin_role', $pre.'admin_role_priv', $pre.'block', $pre.'block_history', $pre.'cache', $pre.'dbsource', $pre.'log', $pre.'urlrule', $pre.'session', $pre.'sso_admin', $pre.'sso_applications', $pre.'sso_members', $pre.'sso_messagequeue', $pre.'sso_session', $pre.'sso_settings', $pre.'site', $pre.'queue', $pre.'release_point');
++while(($rs = $db->fetch_next()) != false) {
++	if(strpos($rs['Name'], $pre) === 0 && !in_array($rs['Name'], $sys_tables) && !preg_match('/'.$pre.'poster_(\d){6}/i',$rs['Name'])) {
++		$web_tables[] = $rs['Name'];
++	}
++}
++foreach($web_tables as $key => $table) {
++	$data =$db->get_fields($table);
++	$web_tables_info[$table] = array_keys($data);
++}
++$json_web_tables_info = json_encode($web_tables_info);
++$db->free_result($tbl_show);
++?>
++<table cellpadding="2" cellspacing="1" onclick="javascript:$('#minlength').val(0);$('#maxlength').val(255);">
++	<tr>
++		<td>搜索类型</td>
++		<td><input name="setting[link_type]" type="radio" value="1" checked /> 下拉选择框 <input name="setting[link_type]" type="radio" value="0" /> 搜索选择</td>
++	</tr>
++	<tr>
++		<td>关联表名</td>
++		<td>
++			<?php if(is_array($web_tables)){?>
++				<select name="setting[table_name]" id="st_name">
++					<?php
++					foreach($web_tables as $key => $v){
++					?>
++						<option value='<?php echo $v?>'><?php echo $v?></option>
++					<?php } ?>
++				</select>
++			<?php }?>
++
++			<script type="text/javascript">
++				<!--
++				var json_web_tables_info =eval(<?php echo $json_web_tables_info?>);
++				$(document).ready(function() {
++
++					updatemenu($('#st_name').val());
++					$("#st_name").change(function() {
++						updatemenu($(this).trigger("select").val());
++						$('#select_title').val('');
++					});
++
++					function updatemenu(table_name) {
++						var data = '';
++						$.each(json_web_tables_info, function(i,n){
++							if(i == table_name){
++								data = n;
++								return false;
++							}else{
++								return true;
++							}
++						});
++						if (data != '') {
++							var str = '';
++							$.each(data, function(i,n){
++							    str += '<option>'+n+'</option>';
++							});
++							$('#like_title').html(str);
++							$('#set_title').html(str);
++							$('#set_id').html(str);
++						}else{
++							alert('数据查询错误！');
++						}
++					}
++
++					var linkage_arr = ['like_title','set_title','set_id'];
++					var linkage_value_arr = [];
++					$("#like_title").change(function() {
++						linkagechange('like_title','select_title',$(this).trigger("select").val());
++					});
++					$("#set_title").change(function() {
++						$("#like_title").val($(this).trigger("select").val());
++						linkagechange('set_title','select_title',$(this).trigger("select").val());
++					});
++					$("#set_id").change(function() {
++						linkagechange('set_id','select_title',$(this).trigger("select").val());
++					});
++
++					function linkagechange(ele_from,ele_to,value){
++						var toVal = $('#'+ele_to).val();
++						var toValArr = [];
++						if(toVal){
++							toValArr = toVal.split(',');
++							if($.inArray(value,toValArr) === -1)
++								toValArr.push(value);
++							var source_value = linkage_value_arr[ele_from + '_value'];
++							var other_value = true;
++							$.each(linkage_arr, function(i,n){
++								if(n != ele_from){
++									if($('#' + n).val() == source_value){
++										other_value = false;
++										return false;
++									}
++									if($.inArray($('#' + n).val(),toValArr) === -1)
++										toValArr.push($('#' + n).val());
++								}
++							});
++							if(other_value){
++								var i = $.inArray(source_value,toValArr);
++								if(i !== -1 && source_value !== value)
++									toValArr.splice(i,1);
++							}
++						}else{
++							toValArr.push(value);
++							$.each(linkage_arr, function(i,n){
++								if(n != ele_from){
++									if($.inArray($('#' + n).val(),toValArr) === -1)
++										toValArr.push($('#' + n).val());
++									linkage_value_arr[n + '_value'] = $('#' + n).val();
++								}
++							});
++						}
++						$('#'+ele_to).val(toValArr.join(','));
++						linkage_value_arr[ele_from + '_value'] = value;
++					}
++				});
++				//-->
++			</script>
++		</td>
++	</tr>
++	<tr>
++		<td>主键</td>
++		<td><select name="setting[set_id]" id="set_id"></select> 用于返回值赋值给管理字段作为存入ID。(表里面唯一标示，比如主键)</td>
++	</tr>
++	<tr>
++		<td>赋值字段</td>
++		<td><select name="setting[set_title]" id="set_title"></select> 用于返回值赋值给管理字段作为存入标题。</td>
++	</tr>
++	<tr>
++		<td>like字段</td>
++		<td><select name="setting[like_title]" id="like_title"></select> 选择like字段。(解读为where '【字段名】' like '%张三%')</td>
++	</tr>
++	<tr>
++		<td>查询字段</td>
++		<td><input type="text" name="setting[select_title]" id="select_title" value="" size="40" class="input-text"> 请填写字段名如：id,title (为空则表示全部查询。非空时必须包含like字段、赋值字段、主键)</td>
++	</tr>
++	<tr>
++		<td>存入数据方式</td>
++		<td><input type="radio" name="setting[insert_type]" value="id" checked="checked"/>ID存入<input type="radio" name="setting[insert_type]" value="title"/>标题存入<input name="setting[insert_type]" type="radio" value="title_id"/>
++标题+ID存入<input name="setting[insert_type]" type="radio" value="multiple_id" id="multiple_id"/>多选ID存入</td>
++	</tr>
++</table>
+\ No newline at end of file
+Index: phpcms_code/phpcms/modules/content/fields/linkfield/field_edit_form.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/linkfield/field_edit_form.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/linkfield/field_edit_form.inc.php	(date 1618385775000)
+@@ -0,0 +1,168 @@
++<?php
++pc_base::load_sys_class('db_factory');
++$database = pc_base::load_config('database');
++$pdo_name = 'default';
++$db = db_factory::get_instance($database)->get_database($pdo_name);
++$tbl_show = $db->query("SHOW TABLE STATUS FROM `".$database[$pdo_name]['database']."`");
++$web_tables = array();
++$web_tables_info = array();
++$pre = $database[$pdo_name]['tablepre'];
++//排除系统关键信息数据表
++$sys_tables = array($pre.'admin', $pre.'admin_panel', $pre.'admin_role', $pre.'admin_role_priv', $pre.'block', $pre.'block_history', $pre.'cache', $pre.'dbsource', $pre.'log', $pre.'urlrule', $pre.'session', $pre.'sso_admin', $pre.'sso_applications', $pre.'sso_members', $pre.'sso_messagequeue', $pre.'sso_session', $pre.'sso_settings', $pre.'site', $pre.'queue', $pre.'release_point');
++while(($rs = $db->fetch_next()) != false) {
++	if(strpos($rs['Name'], $pre) === 0 && !in_array($rs['Name'], $sys_tables) && !preg_match('/'.$pre.'poster_(\d){6}/i',$rs['Name'])) {
++		$web_tables[] = $rs['Name'];
++	}
++}
++foreach($web_tables as $key => $table) {
++	$data =$db->get_fields($table);
++	$web_tables_info[$table] = array_keys($data);
++}
++$json_web_tables_info = json_encode($web_tables_info);
++$db->free_result($tbl_show);
++?>
++<table cellpadding="2" cellspacing="1" onclick="javascript:$('#minlength').val(0);$('#maxlength').val(255);">
++	<tr>
++		<td>搜索类型</td>
++		<td><input name="setting[link_type]" type="radio" value="1"<?php if ($setting['link_type']==1){;?> checked<?php };?> /> 下拉选择框 <input name="setting[link_type]" type="radio" value="0"<?php if ($setting['link_type']==0){;?> checked<?php };?> /> 搜索选择</td>
++	</tr>
++	<tr>
++		<td>关联表名</td>
++		<td>
++			<?php if(is_array($web_tables)){?>
++				<select name="setting[table_name]" id="st_name">
++					<?php
++					foreach($web_tables as $key => $v){
++						if($v == $setting['table_name']) $select = 'selected';
++						else $select = '';
++						?>
++						<option value='<?php echo $v?>' <?php echo $select?>><?php echo $v?></option>
++					<?php } ?>
++				</select>
++			<?php }?>
++
++			<script type="text/javascript">
++				<!--
++				var json_web_tables_info =eval(<?php echo $json_web_tables_info?>);
++				$(document).ready(function() {
++					updatemenu($('#st_name').val(),true);
++
++					$("#st_name").change(function() {
++						updatemenu($(this).trigger("select").val(),false);
++						$('#select_title').val('');
++					});
++
++					function updatemenu(table_name,seltype) {
++						var data = '';
++						$.each(json_web_tables_info, function(i,n){
++							if(i == table_name){
++								data = n;
++								return false;
++							}else{
++								return true;
++							}
++						});
++						if (data != '') {
++							update(data,'like_title','<?php echo $setting['like_title'];?>',seltype);
++							update(data,'set_id','<?php echo $setting['set_id'];?>',seltype);
++							update(data,'set_title','<?php echo $setting['set_title'];?>',seltype);
++						}else{
++							alert('数据查询错误！');
++						}
++					}
++					function update(data,rid,riddata,seltype) {
++						var str = selected = '';
++						$.each(data, function(i,n){
++							if(seltype){
++								if (n == riddata) {
++									selected ='selected';
++								}else{
++									selected ='';
++								}
++							}else{
++								selected ='';
++							}
++							str += '<option '+selected+'>'+n+'</option>';
++						});
++						$('#'+rid).html(str);
++					}
++
++					var linkage_arr = ['like_title','set_title','set_id'];
++					var linkage_value_arr = [];
++					linkage_value_arr['like_title_value'] = $("#like_title").val();
++					linkage_value_arr['set_title_value'] = $("#set_title").val();
++					linkage_value_arr['set_id_value'] = $("#set_id").val();
++					$("#like_title").change(function() {
++						linkagechange('like_title','select_title',$(this).trigger("select").val());
++					});
++					$("#set_title").change(function() {
++						$("#like_title").val($(this).trigger("select").val());
++						linkagechange('set_title','select_title',$(this).trigger("select").val());
++					});
++					$("#set_id").change(function() {
++						linkagechange('set_id','select_title',$(this).trigger("select").val());
++					});
++
++					function linkagechange(ele_from,ele_to,value){
++						var toVal = $('#'+ele_to).val();
++						var toValArr = [];
++						if(toVal){
++							toValArr = toVal.split(',');
++							if($.inArray(value,toValArr) === -1)
++								toValArr.push(value);
++							var source_value = linkage_value_arr[ele_from + '_value'];
++							var other_value = true;
++							$.each(linkage_arr, function(i,n){
++								if(n != ele_from){
++									if($('#' + n).val() == source_value){
++										other_value = false;
++										return false;
++									}
++									if($.inArray($('#' + n).val(),toValArr) === -1)
++										toValArr.push($('#' + n).val());
++								}
++							});
++							if(other_value){
++								var i = $.inArray(source_value,toValArr);
++								if(i !== -1 && source_value !== value)
++									toValArr.splice(i,1);
++							}
++						}else{
++							toValArr.push(value);
++							$.each(linkage_arr, function(i,n){
++								if(n != ele_from){
++									if($.inArray($('#' + n).val(),toValArr) === -1)
++										toValArr.push($('#' + n).val());
++									linkage_value_arr[n + '_value'] = $('#' + n).val();
++								}
++							});
++						}
++						$('#'+ele_to).val(toValArr.join(','));
++						linkage_value_arr[ele_from + '_value'] = value;
++					}
++				});
++				//-->
++			</script>
++		</td>
++	</tr>
++	<tr>
++		<td>主键</td>
++		<td><select name="setting[set_id]" id="set_id"></select> 用于返回值赋值给管理字段作为存入ID。(表里面唯一标示，比如主键)</td>
++	</tr>
++	<tr>
++		<td>赋值字段</td>
++		<td><select name="setting[set_title]" id="set_title"></select> 用于返回值赋值给管理字段作为存入标题。</td>
++	</tr>
++	<tr>
++		<td>like字段</td>
++		<td><select name="setting[like_title]" id="like_title"></select> 选择like字段。(解读为where '【字段名】' like '%张三%')</td>
++	</tr>
++	<tr>
++		<td>查询字段</td>
++		<td><input type="text" name="setting[select_title]" id="select_title" value="<?php echo $setting['select_title'];?>" size="40" class="input-text"> 请填写字段名如：id,title (为空则表示全部查询。非空时必须包含like字段、赋值字段、主键)</td>
++	</tr>
++	<tr>
++		<td>存入数据方式</td>
++		<td><input type="radio" name="setting[insert_type]" value="id" <?php if($setting['insert_type']=='id') echo 'checked';?> />ID存入<input type="radio" name="setting[insert_type]" value="title" <?php if($setting['insert_type']=='title') echo 'checked';?> />标题存入<input type="radio" name="setting[insert_type]" value="title_id" <?php if($setting['insert_type']=='title_id') echo 'checked';?> />标题+ID存入<input name="setting[insert_type]" type="radio" value="multiple_id" id="multiple_id" <?php if($setting['insert_type']=='multiple_id') echo 'checked';?> />多选ID存入</td>
++	</tr>
++</table>
+\ No newline at end of file
+Index: phpcms_code/phpcms/modules/content/fields/linkfield/form.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/linkfield/form.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/linkfield/form.inc.php	(date 1618385775000)
+@@ -0,0 +1,168 @@
++	function linkfield($field, $value, $fieldinfo) {
++        extract($fieldinfo);
++        $setting = string2array($setting);
++
++        $get_db = pc_base::load_model("get_model");
++
++        $sel_tit=$setting['select_title']?$setting['select_title']:'*';
++
++        $sql = "SELECT ".$sel_tit." FROM `".$setting['table_name']."`";
++        $r= $get_db->query($sql);
++        while(($s = $get_db->fetch_next()) != false) {
++            $dataArr[] = $s;
++        }
++
++        if($fieldinfo['link_type']){
++            $value = str_replace('&amp;','&',$value);
++
++            if($fieldinfo['insert_type'] == "multiple_id"){
++                $data = '<link href="statics/plugin/multiple_select/multiple-select.css" rel="stylesheet">
++                <script type="text/javascript" src="statics/plugin/multiple_select/multiple-select.js"></script>
++                <script>$(function() {
++                        $("#'.$fieldinfo['field'].'").multipleSelect({width:"100%", filter: true, minimumCountSelected: 4, placeholder:"≡请选择≡", selectAll:false, allSelected:"全部被选中", countSelected: "# / % 已选择"});
++                    });</script>';
++                $data1 = $data2 = '';
++                $data .= '<input type="hidden" name="info['.$fieldinfo['field'].'][]" value="-99"><select name="info['.$fieldinfo['field'].'][]" id="'.$fieldinfo['field'].'" multiple="multiple">';
++            }else{
++                $data = '<select name="info['.$fieldinfo['field'].']" id="'.$fieldinfo['field'].'"><option>≡请选择≡</option>';
++			}
++
++            foreach($dataArr as $v) {
++				if($fieldinfo['insert_type']=="id"){
++					$output_type = $v[$fieldinfo['set_id']];
++				}elseif($fieldinfo['insert_type']=="title"){
++					$output_type = $v[$fieldinfo['set_title']];
++				}elseif($fieldinfo['insert_type']=="title_id"){
++					$output_type = $v[$fieldinfo['set_title']].'_'.$v[$fieldinfo['set_id']];
++				}else{
++                    $output_type = $v[$fieldinfo['set_id']];
++                }
++
++                if($fieldinfo['insert_type'] == "multiple_id" && $value){
++                    $value = trim($value,'|');
++                    $arr_value = explode('|',$value);
++                    if(in_array($output_type,$arr_value))
++                        $data1 .= "<option value='".$output_type."' selected>".$v[$fieldinfo['set_title']]."</option>\n";
++                    else
++                        $data2 .= "<option value='".$output_type."'>".$v[$fieldinfo['set_title']]."</option>\n";
++                }else{
++                    if($output_type == $value) $select = 'selected';
++                    else $select = '';
++                    $data .= "<option value='".$output_type."' ".$select.">".$v[$fieldinfo['set_title']]."</option>\n";
++                }
++            }
++            if($fieldinfo['insert_type'] == "multiple_id" && $value)
++                $data .= $data1.$data2;
++            $data .= '</select>';
++
++        }else{
++            $multiple_field_value = '';
++            $multiple_field_value_escape = '';
++            $cat_field_value = '';
++            $data_json = json_encode($dataArr);
++
++            if($fieldinfo['insert_type'] == "multiple_id"){
++                if(strpos($value, '_') !== false)
++                    $value = preg_match('/(\d+)/',$value,$a) ? $a[1] : '';
++
++                $value = trim($value,'|');
++                $value_escape = str_replace('|',',',$value);
++
++                if($value && preg_match('/^[0-9,]+$/i',$value_escape)){
++                    $value_arr = explode(',', $value_escape);
++                    foreach($dataArr as $v) {
++                        if(in_array($v[$fieldinfo['set_id']],$value_arr))
++                            $multiple_field_value .= '<li class="search_view" id="search_view_' . $v[$fieldinfo['set_id']] . '"><span>' . $v[$fieldinfo['set_title']] . '</span><a href="javascript:;" class="close" onclick="remove_serach' . $field . '(\'' . $v[$fieldinfo['set_title']] . '\',\'' . $v[$fieldinfo['set_id']] . '\')"></a></li>';
++                    }
++
++                    $multiple_field_value_escape = str_replace("'","\'",$multiple_field_value);
++                }else{
++                    $value = '';
++                }
++            }elseif($fieldinfo['insert_type'] == "title_id" && $value){
++                $exp_value = explode('_',$value);
++                $cat_field_value = $exp_value[0];
++            }elseif($fieldinfo['insert_type'] == "title" && $value){
++                $cat_field_value = $value;
++            }
++            $data = <<<EOT
++            <style type="text/css">
++            .content_div{ margin-top:0px; font-size:14px; position:relative}
++            #search_div{$field}{z-index: 2; position:absolute; top:23px; border:1px solid #dfdfdf; text-align:left; padding:1px; left:0px;*left:0px; width:263px;*width:260px; background-color:#FFF; display:none; font-size:12px;}
++            #search_div{$field} li{ line-height:24px;cursor:pointer}
++            #search_div{$field} li a{  padding-left:6px;display:block}
++            #search_div{$field} li a:hover, #search_div{$field} li:hover{ background-color:#e2eaff}
++            #search_view{$field}{padding-bottom:0;}
++            #search_view{$field} li.search_view{float: left;margin: 3px 10px 3px 0;padding-left: 5px;padding-bottom: 2px;}
++            #search_view{$field} li.search_view span{margin-right: 30px;}
++            </style>
++            <div class="content_div">
++                <input type="text" size="41" id="cat_search{$field}" value="{$cat_field_value}" onfocus="if(this.value == this.defaultValue) this.value = ''" onblur="if(this.value.replace(' ','') == '') this.value = this.defaultValue;" class='input-text'><input name="info[{$fieldinfo['field']}]" id="{$fieldinfo['field']}" type="hidden" class='input-text' value="{$value}" size="41"/>
++                <ul id="search_div{$field}"></ul>
++                <ul id="search_view{$field}" class="list-dot">{$multiple_field_value}</ul>
++            </div>
++            <script type="text/javascript" language="javascript" >
++                var str_title = '{$multiple_field_value_escape}';
++                var data_json = eval({$data_json});
++                function remove_serach{$field}(title,id){
++                    $('#search_view_'+id).remove();
++                    str_title = $('#search_view{$field}').html();
++                    var ele_value = $("#{$fieldinfo['field']}").val();
++                    ele_value = ele_value.replace('|' + id,'');
++                    ele_value = ele_value.replace(id,'');
++                    $("#{$fieldinfo['field']}").val(ele_value);
++                }
++                function setvalue{$field}(title,id){
++                    var title = title;
++                    var id = id;
++                    var type = "{$fieldinfo['insert_type']}";
++                    if(type == "id"){
++                        $("#{$fieldinfo['field']}").val(id);
++                    }else if(type == "title"){
++                        $("#{$fieldinfo['field']}").val(title);
++                    }else if(type == "title_id"){
++                        $("#{$fieldinfo['field']}").val(title+'_'+id);
++                    }
++                    else if(type == "multiple_id"){
++                        var elem_value = $("#{$fieldinfo['field']}").val();
++                        if(title && elem_value.indexOf(id) < 0){
++                            str_title = str_title + '<li class="search_view" id="search_view_' + id + '"><span>' + title + '</span><a href="javascript:;" class="close" onclick="remove_serach{$field}(\'' + title + '\',\'' + id + '\')"></a></li>';
++                            elem_value = (elem_value)?elem_value + '|' + id:id;
++                            $("#{$fieldinfo['field']}").val(elem_value);
++                            $('#search_view{$field}').html(str_title);
++                        }
++                    }
++                    $("#cat_search{$field}").val(title);
++                    $('#search_div{$field}').hide();
++                }
++				
++            $(document).ready(function(){
++				$('#cat_search{$field}').keyup(function(){
++					var value = $("#cat_search{$field}").val();
++                    if (value.length > 0){
++                        var str = '';
++                        var ele_value = $("#{$fieldinfo['field']}").val();
++                        var ele_value_arr = ele_value.split('|');
++                        value = value.replace(/^\s+|\s+$/gm,'');
++                        $.each(data_json, function(i,n){
++                            if($.inArray(n.{$fieldinfo['set_id']}, ele_value_arr) === -1){
++                                if(n.{$fieldinfo['like_title']}.indexOf(value) !== -1 || value == '')
++                                    str += '<li onclick=\'setvalue{$field}("'+n.{$fieldinfo['set_title']}+'","'+n.{$fieldinfo['set_id']}+'");\'>'+n.{$fieldinfo['set_title']}+'</li>';
++                            }
++                        });
++                        if (str != null && str!= '') {
++                            $('#search_div{$field}').html(str);
++                            $('#search_div{$field}').show();
++                        } else {
++                            $('#search_div{$field}').hide();
++                        }
++                    } else {
++                        $('#search_div{$field}').hide();
++                    }
++				});	
++            })
++            </script>
++EOT;
++		}
++		return $data;
++    }
+\ No newline at end of file
+Index: phpcms_code/phpcms/modules/content/fields/linkfield/input.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/linkfield/input.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/linkfield/input.inc.php	(date 1618385775000)
+@@ -0,0 +1,10 @@
++	function linkfield($field, $value) {
++		if($this->fields[$field]['link_type'] && $this->fields[$field]['insert_type'] == 'multiple_id') {
++			if(!is_array($value) || empty($value)) return false;
++			array_shift($value);
++			$value = implode("|",$value);
++			return $value;
++		} else {
++			if(!empty($value)) return $value;
++		}
++	}
+Index: phpcms_code/phpcms/modules/content/fields/linkfield/output.inc.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+--- phpcms_code/phpcms/modules/content/fields/linkfield/output.inc.php	(date 1618385775000)
++++ phpcms_code/phpcms/modules/content/fields/linkfield/output.inc.php	(date 1618385775000)
+@@ -0,0 +1,3 @@
++	function linkfield($field, $value) {
++		return $value;
++	}
+\ No newline at end of file
+Index: phpcms_code/statics/plugin/multiple_select/multiple-select.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+--- phpcms_code/statics/plugin/multiple_select/multiple-select.css	(date 1618385775000)
++++ phpcms_code/statics/plugin/multiple_select/multiple-select.css	(date 1618385775000)
+@@ -0,0 +1,191 @@
++/**
++ * @author zhixin wen <wenzhixin2010@gmail.com>
++ */
++
++.ms-parent {
++    display: inline-block;
++    position: relative;
++    vertical-align: middle;
++}
++
++.ms-choice {
++    display: block;
++    width: 100%;
++    height: 26px;
++    padding: 0;
++    overflow: hidden;
++    cursor: pointer;
++    border: 1px solid #aaa;
++    text-align: left;
++    white-space: nowrap;
++    line-height: 26px;
++    color: #444;
++    text-decoration: none;
++    -webkit-border-radius: 4px;
++    -moz-border-radius: 4px;
++    border-radius: 4px;
++    background-color: #fff;
++}
++
++.ms-choice.disabled {
++    background-color: #f4f4f4;
++    background-image: none;
++    border: 1px solid #ddd;
++    cursor: default;
++}
++
++.ms-choice > span {
++    position: absolute;
++    top: 0;
++    left: 0;
++    right: 20px;
++    white-space: nowrap;
++    overflow: hidden;
++    text-overflow: ellipsis;
++    display: block;
++    padding-left: 8px;
++}
++
++.ms-choice > span.placeholder {
++    color: #999;
++}
++
++.ms-choice > div {
++    position: absolute;
++    top: 0;
++    right: 0;
++    width: 20px;
++    height: 25px;
++    background: url('multiple-select.png') left top no-repeat;
++}
++
++.ms-choice > div.open {
++    background: url('multiple-select.png') right top no-repeat;
++}
++
++.ms-drop {
++    width: 100%;
++    overflow: hidden;
++    display: none;
++    margin-top: -1px;
++    padding: 0;
++    position: absolute;
++    z-index: 1000;
++    background: #fff;
++    color: #000;
++    border: 1px solid #aaa;
++    -webkit-border-radius: 4px;
++    -moz-border-radius: 4px;
++    border-radius: 4px;
++}
++
++.ms-drop.bottom {
++    top: 100%;
++    -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
++    -moz-box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
++    box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
++}
++
++.ms-drop.top {
++    bottom: 100%;
++    -webkit-box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
++    -moz-box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
++    box-shadow: 0 -4px 5px rgba(0, 0, 0, .15);
++}
++
++.ms-search {
++    display: inline-block;
++    margin: 0;
++    min-height: 26px;
++    padding: 4px;
++    position: relative;
++    white-space: nowrap;
++    width: 100%;
++    z-index: 10000;
++}
++
++.ms-search input {
++    width: 100%;
++    height: auto !important;
++    min-height: 24px;
++    padding: 0 20px 0 5px;
++    margin: 0;
++    outline: 0;
++    font-family: sans-serif;
++    font-size: 1em;
++    border: 1px solid #aaa;
++    -webkit-border-radius: 0;
++    -moz-border-radius: 0;
++    border-radius: 0;
++    -webkit-box-shadow: none;
++    -moz-box-shadow: none;
++    box-shadow: none;
++    background: #fff url('multiple-select.png') no-repeat 100% -22px;
++    background: url('multiple-select.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
++    background: url('multiple-select.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
++    background: url('multiple-select.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
++    background: url('multiple-select.png') no-repeat 100% -22px, -o-linear-gradient(bottom, white 85%, #eeeeee 99%);
++    background: url('multiple-select.png') no-repeat 100% -22px, -ms-linear-gradient(top, #ffffff 85%, #eeeeee 99%);
++    background: url('multiple-select.png') no-repeat 100% -22px, linear-gradient(top, #ffffff 85%, #eeeeee 99%);
++}
++
++.ms-search, .ms-search input {
++    -webkit-box-sizing: border-box;
++    -khtml-box-sizing: border-box;
++    -moz-box-sizing: border-box;
++    -ms-box-sizing: border-box;
++    box-sizing: border-box;
++}
++
++.ms-drop ul {
++    overflow: auto;
++    margin: 0;
++    padding: 5px 8px;
++}
++
++.ms-drop ul > li {
++    list-style: none;
++    display: list-item;
++    background-image: none;
++    position: static;
++}
++
++.ms-drop ul > li .disabled {
++    opacity: .35;
++    filter: Alpha(Opacity=35);
++}
++
++.ms-drop ul > li.multiple {
++    display: block;
++    float: left;
++}
++
++.ms-drop ul > li.group {
++    clear: both;
++}
++
++.ms-drop ul > li.multiple label {
++    width: 100%;
++    display: block;
++    white-space: nowrap;
++    overflow: hidden;
++    text-overflow: ellipsis;
++}
++
++.ms-drop ul > li label {
++    font-weight: normal;
++    display: block;
++    white-space: nowrap;
++}
++
++.ms-drop ul > li label.optgroup {
++    font-weight: bold;
++}
++
++.ms-drop input[type="checkbox"] {
++    vertical-align: middle;
++}
++
++.ms-drop .ms-no-results {
++    display: none;
++}
+Index: phpcms_code/statics/plugin/multiple_select/multiple-select.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+--- phpcms_code/statics/plugin/multiple_select/multiple-select.js	(date 1618385775000)
++++ phpcms_code/statics/plugin/multiple_select/multiple-select.js	(date 1618385775000)
+@@ -0,0 +1,782 @@
++/**
++ * @author zhixin wen <wenzhixin2010@gmail.com>
++ * @version 1.2.1
++ *
++ * http://wenzhixin.net.cn/p/multiple-select/
++ */
++
++(function ($) {
++
++    'use strict';
++
++    // it only does '%s', and return '' when arguments are undefined
++    var sprintf = function (str) {
++        var args = arguments,
++            flag = true,
++            i = 1;
++
++        str = str.replace(/%s/g, function () {
++            var arg = args[i++];
++
++            if (typeof arg === 'undefined') {
++                flag = false;
++                return '';
++            }
++            return arg;
++        });
++        return flag ? str : '';
++    };
++
++    var removeDiacritics = function (str) {
++        var defaultDiacriticsRemovalMap = [
++            {'base':'A', 'letters':/[\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g},
++            {'base':'AA','letters':/[\uA732]/g},
++            {'base':'AE','letters':/[\u00C6\u01FC\u01E2]/g},
++            {'base':'AO','letters':/[\uA734]/g},
++            {'base':'AU','letters':/[\uA736]/g},
++            {'base':'AV','letters':/[\uA738\uA73A]/g},
++            {'base':'AY','letters':/[\uA73C]/g},
++            {'base':'B', 'letters':/[\u0042\u24B7\uFF22\u1E02\u1E04\u1E06\u0243\u0182\u0181]/g},
++            {'base':'C', 'letters':/[\u0043\u24B8\uFF23\u0106\u0108\u010A\u010C\u00C7\u1E08\u0187\u023B\uA73E]/g},
++            {'base':'D', 'letters':/[\u0044\u24B9\uFF24\u1E0A\u010E\u1E0C\u1E10\u1E12\u1E0E\u0110\u018B\u018A\u0189\uA779]/g},
++            {'base':'DZ','letters':/[\u01F1\u01C4]/g},
++            {'base':'Dz','letters':/[\u01F2\u01C5]/g},
++            {'base':'E', 'letters':/[\u0045\u24BA\uFF25\u00C8\u00C9\u00CA\u1EC0\u1EBE\u1EC4\u1EC2\u1EBC\u0112\u1E14\u1E16\u0114\u0116\u00CB\u1EBA\u011A\u0204\u0206\u1EB8\u1EC6\u0228\u1E1C\u0118\u1E18\u1E1A\u0190\u018E]/g},
++            {'base':'F', 'letters':/[\u0046\u24BB\uFF26\u1E1E\u0191\uA77B]/g},
++            {'base':'G', 'letters':/[\u0047\u24BC\uFF27\u01F4\u011C\u1E20\u011E\u0120\u01E6\u0122\u01E4\u0193\uA7A0\uA77D\uA77E]/g},
++            {'base':'H', 'letters':/[\u0048\u24BD\uFF28\u0124\u1E22\u1E26\u021E\u1E24\u1E28\u1E2A\u0126\u2C67\u2C75\uA78D]/g},
++            {'base':'I', 'letters':/[\u0049\u24BE\uFF29\u00CC\u00CD\u00CE\u0128\u012A\u012C\u0130\u00CF\u1E2E\u1EC8\u01CF\u0208\u020A\u1ECA\u012E\u1E2C\u0197]/g},
++            {'base':'J', 'letters':/[\u004A\u24BF\uFF2A\u0134\u0248]/g},
++            {'base':'K', 'letters':/[\u004B\u24C0\uFF2B\u1E30\u01E8\u1E32\u0136\u1E34\u0198\u2C69\uA740\uA742\uA744\uA7A2]/g},
++            {'base':'L', 'letters':/[\u004C\u24C1\uFF2C\u013F\u0139\u013D\u1E36\u1E38\u013B\u1E3C\u1E3A\u0141\u023D\u2C62\u2C60\uA748\uA746\uA780]/g},
++            {'base':'LJ','letters':/[\u01C7]/g},
++            {'base':'Lj','letters':/[\u01C8]/g},
++            {'base':'M', 'letters':/[\u004D\u24C2\uFF2D\u1E3E\u1E40\u1E42\u2C6E\u019C]/g},
++            {'base':'N', 'letters':/[\u004E\u24C3\uFF2E\u01F8\u0143\u00D1\u1E44\u0147\u1E46\u0145\u1E4A\u1E48\u0220\u019D\uA790\uA7A4]/g},
++            {'base':'NJ','letters':/[\u01CA]/g},
++            {'base':'Nj','letters':/[\u01CB]/g},
++            {'base':'O', 'letters':/[\u004F\u24C4\uFF2F\u00D2\u00D3\u00D4\u1ED2\u1ED0\u1ED6\u1ED4\u00D5\u1E4C\u022C\u1E4E\u014C\u1E50\u1E52\u014E\u022E\u0230\u00D6\u022A\u1ECE\u0150\u01D1\u020C\u020E\u01A0\u1EDC\u1EDA\u1EE0\u1EDE\u1EE2\u1ECC\u1ED8\u01EA\u01EC\u00D8\u01FE\u0186\u019F\uA74A\uA74C]/g},
++            {'base':'OI','letters':/[\u01A2]/g},
++            {'base':'OO','letters':/[\uA74E]/g},
++            {'base':'OU','letters':/[\u0222]/g},
++            {'base':'P', 'letters':/[\u0050\u24C5\uFF30\u1E54\u1E56\u01A4\u2C63\uA750\uA752\uA754]/g},
++            {'base':'Q', 'letters':/[\u0051\u24C6\uFF31\uA756\uA758\u024A]/g},
++            {'base':'R', 'letters':/[\u0052\u24C7\uFF32\u0154\u1E58\u0158\u0210\u0212\u1E5A\u1E5C\u0156\u1E5E\u024C\u2C64\uA75A\uA7A6\uA782]/g},
++            {'base':'S', 'letters':/[\u0053\u24C8\uFF33\u1E9E\u015A\u1E64\u015C\u1E60\u0160\u1E66\u1E62\u1E68\u0218\u015E\u2C7E\uA7A8\uA784]/g},
++            {'base':'T', 'letters':/[\u0054\u24C9\uFF34\u1E6A\u0164\u1E6C\u021A\u0162\u1E70\u1E6E\u0166\u01AC\u01AE\u023E\uA786]/g},
++            {'base':'TZ','letters':/[\uA728]/g},
++            {'base':'U', 'letters':/[\u0055\u24CA\uFF35\u00D9\u00DA\u00DB\u0168\u1E78\u016A\u1E7A\u016C\u00DC\u01DB\u01D7\u01D5\u01D9\u1EE6\u016E\u0170\u01D3\u0214\u0216\u01AF\u1EEA\u1EE8\u1EEE\u1EEC\u1EF0\u1EE4\u1E72\u0172\u1E76\u1E74\u0244]/g},
++            {'base':'V', 'letters':/[\u0056\u24CB\uFF36\u1E7C\u1E7E\u01B2\uA75E\u0245]/g},
++            {'base':'VY','letters':/[\uA760]/g},
++            {'base':'W', 'letters':/[\u0057\u24CC\uFF37\u1E80\u1E82\u0174\u1E86\u1E84\u1E88\u2C72]/g},
++            {'base':'X', 'letters':/[\u0058\u24CD\uFF38\u1E8A\u1E8C]/g},
++            {'base':'Y', 'letters':/[\u0059\u24CE\uFF39\u1EF2\u00DD\u0176\u1EF8\u0232\u1E8E\u0178\u1EF6\u1EF4\u01B3\u024E\u1EFE]/g},
++            {'base':'Z', 'letters':/[\u005A\u24CF\uFF3A\u0179\u1E90\u017B\u017D\u1E92\u1E94\u01B5\u0224\u2C7F\u2C6B\uA762]/g},
++            {'base':'a', 'letters':/[\u0061\u24D0\uFF41\u1E9A\u00E0\u00E1\u00E2\u1EA7\u1EA5\u1EAB\u1EA9\u00E3\u0101\u0103\u1EB1\u1EAF\u1EB5\u1EB3\u0227\u01E1\u00E4\u01DF\u1EA3\u00E5\u01FB\u01CE\u0201\u0203\u1EA1\u1EAD\u1EB7\u1E01\u0105\u2C65\u0250]/g},
++            {'base':'aa','letters':/[\uA733]/g},
++            {'base':'ae','letters':/[\u00E6\u01FD\u01E3]/g},
++            {'base':'ao','letters':/[\uA735]/g},
++            {'base':'au','letters':/[\uA737]/g},
++            {'base':'av','letters':/[\uA739\uA73B]/g},
++            {'base':'ay','letters':/[\uA73D]/g},
++            {'base':'b', 'letters':/[\u0062\u24D1\uFF42\u1E03\u1E05\u1E07\u0180\u0183\u0253]/g},
++            {'base':'c', 'letters':/[\u0063\u24D2\uFF43\u0107\u0109\u010B\u010D\u00E7\u1E09\u0188\u023C\uA73F\u2184]/g},
++            {'base':'d', 'letters':/[\u0064\u24D3\uFF44\u1E0B\u010F\u1E0D\u1E11\u1E13\u1E0F\u0111\u018C\u0256\u0257\uA77A]/g},
++            {'base':'dz','letters':/[\u01F3\u01C6]/g},
++            {'base':'e', 'letters':/[\u0065\u24D4\uFF45\u00E8\u00E9\u00EA\u1EC1\u1EBF\u1EC5\u1EC3\u1EBD\u0113\u1E15\u1E17\u0115\u0117\u00EB\u1EBB\u011B\u0205\u0207\u1EB9\u1EC7\u0229\u1E1D\u0119\u1E19\u1E1B\u0247\u025B\u01DD]/g},
++            {'base':'f', 'letters':/[\u0066\u24D5\uFF46\u1E1F\u0192\uA77C]/g},
++            {'base':'g', 'letters':/[\u0067\u24D6\uFF47\u01F5\u011D\u1E21\u011F\u0121\u01E7\u0123\u01E5\u0260\uA7A1\u1D79\uA77F]/g},
++            {'base':'h', 'letters':/[\u0068\u24D7\uFF48\u0125\u1E23\u1E27\u021F\u1E25\u1E29\u1E2B\u1E96\u0127\u2C68\u2C76\u0265]/g},
++            {'base':'hv','letters':/[\u0195]/g},
++            {'base':'i', 'letters':/[\u0069\u24D8\uFF49\u00EC\u00ED\u00EE\u0129\u012B\u012D\u00EF\u1E2F\u1EC9\u01D0\u0209\u020B\u1ECB\u012F\u1E2D\u0268\u0131]/g},
++            {'base':'j', 'letters':/[\u006A\u24D9\uFF4A\u0135\u01F0\u0249]/g},
++            {'base':'k', 'letters':/[\u006B\u24DA\uFF4B\u1E31\u01E9\u1E33\u0137\u1E35\u0199\u2C6A\uA741\uA743\uA745\uA7A3]/g},
++            {'base':'l', 'letters':/[\u006C\u24DB\uFF4C\u0140\u013A\u013E\u1E37\u1E39\u013C\u1E3D\u1E3B\u017F\u0142\u019A\u026B\u2C61\uA749\uA781\uA747]/g},
++            {'base':'lj','letters':/[\u01C9]/g},
++            {'base':'m', 'letters':/[\u006D\u24DC\uFF4D\u1E3F\u1E41\u1E43\u0271\u026F]/g},
++            {'base':'n', 'letters':/[\u006E\u24DD\uFF4E\u01F9\u0144\u00F1\u1E45\u0148\u1E47\u0146\u1E4B\u1E49\u019E\u0272\u0149\uA791\uA7A5]/g},
++            {'base':'nj','letters':/[\u01CC]/g},
++            {'base':'o', 'letters':/[\u006F\u24DE\uFF4F\u00F2\u00F3\u00F4\u1ED3\u1ED1\u1ED7\u1ED5\u00F5\u1E4D\u022D\u1E4F\u014D\u1E51\u1E53\u014F\u022F\u0231\u00F6\u022B\u1ECF\u0151\u01D2\u020D\u020F\u01A1\u1EDD\u1EDB\u1EE1\u1EDF\u1EE3\u1ECD\u1ED9\u01EB\u01ED\u00F8\u01FF\u0254\uA74B\uA74D\u0275]/g},
++            {'base':'oi','letters':/[\u01A3]/g},
++            {'base':'ou','letters':/[\u0223]/g},
++            {'base':'oo','letters':/[\uA74F]/g},
++            {'base':'p','letters':/[\u0070\u24DF\uFF50\u1E55\u1E57\u01A5\u1D7D\uA751\uA753\uA755]/g},
++            {'base':'q','letters':/[\u0071\u24E0\uFF51\u024B\uA757\uA759]/g},
++            {'base':'r','letters':/[\u0072\u24E1\uFF52\u0155\u1E59\u0159\u0211\u0213\u1E5B\u1E5D\u0157\u1E5F\u024D\u027D\uA75B\uA7A7\uA783]/g},
++            {'base':'s','letters':/[\u0073\u24E2\uFF53\u00DF\u015B\u1E65\u015D\u1E61\u0161\u1E67\u1E63\u1E69\u0219\u015F\u023F\uA7A9\uA785\u1E9B]/g},
++            {'base':'t','letters':/[\u0074\u24E3\uFF54\u1E6B\u1E97\u0165\u1E6D\u021B\u0163\u1E71\u1E6F\u0167\u01AD\u0288\u2C66\uA787]/g},
++            {'base':'tz','letters':/[\uA729]/g},
++            {'base':'u','letters':/[\u0075\u24E4\uFF55\u00F9\u00FA\u00FB\u0169\u1E79\u016B\u1E7B\u016D\u00FC\u01DC\u01D8\u01D6\u01DA\u1EE7\u016F\u0171\u01D4\u0215\u0217\u01B0\u1EEB\u1EE9\u1EEF\u1EED\u1EF1\u1EE5\u1E73\u0173\u1E77\u1E75\u0289]/g},
++            {'base':'v','letters':/[\u0076\u24E5\uFF56\u1E7D\u1E7F\u028B\uA75F\u028C]/g},
++            {'base':'vy','letters':/[\uA761]/g},
++            {'base':'w','letters':/[\u0077\u24E6\uFF57\u1E81\u1E83\u0175\u1E87\u1E85\u1E98\u1E89\u2C73]/g},
++            {'base':'x','letters':/[\u0078\u24E7\uFF58\u1E8B\u1E8D]/g},
++            {'base':'y','letters':/[\u0079\u24E8\uFF59\u1EF3\u00FD\u0177\u1EF9\u0233\u1E8F\u00FF\u1EF7\u1E99\u1EF5\u01B4\u024F\u1EFF]/g},
++            {'base':'z','letters':/[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763]/g}
++        ];
++
++        for (var i = 0; i < defaultDiacriticsRemovalMap.length; i++) {
++            str = str.replace(defaultDiacriticsRemovalMap[i].letters, defaultDiacriticsRemovalMap[i].base);
++        }
++
++        return str;
++
++   };
++
++    function MultipleSelect($el, options) {
++        var that = this,
++            name = $el.attr('name') || options.name || '';
++
++        this.options = options;
++
++        // hide select element
++        this.$el = $el.hide();
++
++        // label element
++        this.$label = this.$el.closest('label');
++        if (this.$label.length === 0 && this.$el.attr('id')) {
++            this.$label = $(sprintf('label[for="%s"]', this.$el.attr('id').replace(/:/g, '\\:')));
++        }
++
++        // restore class and title from select element
++        this.$parent = $(sprintf(
++            '<div class="ms-parent %s" %s/>',
++            $el.attr('class') || '',
++            sprintf('title="%s"', $el.attr('title'))));
++
++        // add placeholder to choice button
++        this.$choice = $(sprintf([
++                '<button type="button" class="ms-choice">',
++                '<span class="placeholder">%s</span>',
++                '<div></div>',
++                '</button>'
++            ].join(''),
++            this.options.placeholder));
++
++        // default position is bottom
++        this.$drop = $(sprintf('<div class="ms-drop %s"%s></div>',
++            this.options.position,
++            sprintf(' style="width: %s"', this.options.dropWidth)));
++
++        this.$el.after(this.$parent);
++        this.$parent.append(this.$choice);
++        this.$parent.append(this.$drop);
++
++        if (this.$el.prop('disabled')) {
++            this.$choice.addClass('disabled');
++        }
++        this.$parent.css('width',
++            this.options.width ||
++            this.$el.css('width') ||
++            this.$el.outerWidth() + 20);
++
++        this.selectAllName = 'data-name="selectAll' + name + '"';
++        this.selectGroupName = 'data-name="selectGroup' + name + '"';
++        this.selectItemName = 'data-name="selectItem' + name + '"';
++
++        if (!this.options.keepOpen) {
++            $(document).click(function (e) {
++                if ($(e.target)[0] === that.$choice[0] ||
++                    $(e.target).parents('.ms-choice')[0] === that.$choice[0]) {
++                    return;
++                }
++                if (($(e.target)[0] === that.$drop[0] ||
++                    $(e.target).parents('.ms-drop')[0] !== that.$drop[0] && e.target !== $el[0]) &&
++                    that.options.isOpen) {
++                    that.close();
++                }
++            });
++        }
++    }
++
++    MultipleSelect.prototype = {
++        constructor: MultipleSelect,
++
++        init: function () {
++            var that = this,
++                $ul = $('<ul></ul>');
++
++            this.$drop.html('');
++
++            if (this.options.filter) {
++                this.$drop.append([
++                    '<div class="ms-search">',
++                    '<input type="text" autocomplete="off" autocorrect="off" autocapitilize="off" spellcheck="false">',
++                    '</div>'].join('')
++                );
++            }
++
++            if (this.options.selectAll && !this.options.single) {
++                $ul.append([
++                    '<li class="ms-select-all">',
++                    '<label>',
++                    sprintf('<input type="checkbox" %s /> ', this.selectAllName),
++                    this.options.selectAllDelimiter[0],
++                    this.options.selectAllText,
++                    this.options.selectAllDelimiter[1],
++                    '</label>',
++                    '</li>'
++                ].join(''));
++            }
++
++            $.each(this.$el.children(), function (i, elm) {
++                $ul.append(that.optionToHtml(i, elm));
++            });
++            $ul.append(sprintf('<li class="ms-no-results">%s</li>', this.options.noMatchesFound));
++            this.$drop.append($ul);
++
++            this.$drop.find('ul').css('max-height', this.options.maxHeight + 'px');
++            this.$drop.find('.multiple').css('width', this.options.multipleWidth + 'px');
++
++            this.$searchInput = this.$drop.find('.ms-search input');
++            this.$selectAll = this.$drop.find('input[' + this.selectAllName + ']');
++            this.$selectGroups = this.$drop.find('input[' + this.selectGroupName + ']');
++            this.$selectItems = this.$drop.find('input[' + this.selectItemName + ']:enabled');
++            this.$disableItems = this.$drop.find('input[' + this.selectItemName + ']:disabled');
++            this.$noResults = this.$drop.find('.ms-no-results');
++
++            this.events();
++            this.updateSelectAll(true);
++            this.update(true);
++
++            if (this.options.isOpen) {
++                this.open();
++            }
++        },
++
++        optionToHtml: function (i, elm, group, groupDisabled) {
++            var that = this,
++                $elm = $(elm),
++                classes = $elm.attr('class') || '',
++                title = sprintf('title="%s"', $elm.attr('title')),
++                multiple = this.options.multiple ? 'multiple' : '',
++                disabled,
++                type = this.options.single ? 'radio' : 'checkbox';
++
++            if ($elm.is('option')) {
++                var value = $elm.val(),
++                    text = that.options.textTemplate($elm),
++                    selected = $elm.prop('selected'),
++                    style = sprintf('style="%s"', this.options.styler(value)),
++                    $el;
++
++                disabled = groupDisabled || $elm.prop('disabled');
++
++                $el = $([
++                    sprintf('<li class="%s %s" %s %s>', multiple, classes, title, style),
++                    sprintf('<label class="%s">', disabled ? 'disabled' : ''),
++                    sprintf('<input type="%s" %s%s%s%s>',
++                        type, this.selectItemName,
++                        selected ? ' checked="checked"' : '',
++                        disabled ? ' disabled="disabled"' : '',
++                        sprintf(' data-group="%s"', group)),
++                    text,
++                    '</label>',
++                    '</li>'
++                ].join(''));
++                $el.find('input').val(value);
++                return $el;
++            }
++            if ($elm.is('optgroup')) {
++                var label = that.options.labelTemplate($elm),
++                    $group = $('<div/>');
++
++                group = 'group_' + i;
++                disabled = $elm.prop('disabled');
++
++                $group.append([
++                    '<li class="group">',
++                    sprintf('<label class="optgroup %s" data-group="%s">', disabled ? 'disabled' : '', group),
++                    this.options.hideOptgroupCheckboxes || this.options.single ? '' :
++                        sprintf('<input type="checkbox" %s %s>',
++                        this.selectGroupName, disabled ? 'disabled="disabled"' : ''),
++                    label,
++                    '</label>',
++                    '</li>'
++                ].join(''));
++
++                $.each($elm.children(), function (i, elm) {
++                    $group.append(that.optionToHtml(i, elm, group, disabled));
++                });
++                return $group.html();
++            }
++        },
++
++        events: function () {
++            var that = this,
++                toggleOpen = function (e) {
++                    e.preventDefault();
++                    that[that.options.isOpen ? 'close' : 'open']();
++                };
++
++            if (this.$label) {
++                this.$label.off('click').on('click', function (e) {
++                    if (e.target.nodeName.toLowerCase() !== 'label' || e.target !== this) {
++                        return;
++                    }
++                    toggleOpen(e);
++                    if (!that.options.filter || !that.options.isOpen) {
++                        that.focus();
++                    }
++                    e.stopPropagation(); // Causes lost focus otherwise
++                });
++            }
++
++            this.$choice.off('click').on('click', toggleOpen)
++                .off('focus').on('focus', this.options.onFocus)
++                .off('blur').on('blur', this.options.onBlur);
++
++            this.$parent.off('keydown').on('keydown', function (e) {
++                switch (e.which) {
++                    case 27: // esc key
++                        that.close();
++                        that.$choice.focus();
++                        break;
++                }
++            });
++
++            this.$searchInput.off('keydown').on('keydown',function (e) {
++                // Ensure shift-tab causes lost focus from filter as with clicking away
++                if (e.keyCode === 9 && e.shiftKey) {
++                    that.close();
++                }
++            }).off('keyup').on('keyup', function (e) {
++                // enter or space
++                // Avoid selecting/deselecting if no choices made
++                if (that.options.filterAcceptOnEnter && (e.which === 13 || e.which == 32) && that.$searchInput.val()) {
++                    that.$selectAll.click();
++                    that.close();
++                    that.focus();
++                    return;
++                }
++                that.filter();
++            });
++
++            this.$selectAll.off('click').on('click', function () {
++                var checked = $(this).prop('checked'),
++                    $items = that.$selectItems.filter(':visible');
++
++                if ($items.length === that.$selectItems.length) {
++                    that[checked ? 'checkAll' : 'uncheckAll']();
++                } else { // when the filter option is true
++                    that.$selectGroups.prop('checked', checked);
++                    $items.prop('checked', checked);
++                    that.options[checked ? 'onCheckAll' : 'onUncheckAll']();
++                    that.update();
++                }
++            });
++            this.$selectGroups.off('click').on('click', function () {
++                var group = $(this).parent().attr('data-group'),
++                    $items = that.$selectItems.filter(':visible'),
++                    $children = $items.filter(sprintf('[data-group="%s"]', group)),
++                    checked = $children.length !== $children.filter(':checked').length;
++
++                $children.prop('checked', checked);
++                that.updateSelectAll();
++                that.update();
++                that.options.onOptgroupClick({
++                    label: $(this).parent().text(),
++                    checked: checked,
++                    children: $children.get(),
++                    instance: that
++                });
++            });
++            this.$selectItems.off('click').on('click', function () {
++                that.updateSelectAll();
++                that.update();
++                that.updateOptGroupSelect();
++                that.options.onClick({
++                    label: $(this).parent().text(),
++                    value: $(this).val(),
++                    checked: $(this).prop('checked'),
++                    instance: that
++                });
++
++                if (that.options.single && that.options.isOpen && !that.options.keepOpen) {
++                    that.close();
++                }
++
++                if (that.options.single) {
++                    var clickedVal = $(this).val();
++                    that.$selectItems.filter(function() {
++                        return $(this).val() !== clickedVal;
++                    }).each(function() {
++                        $(this).prop('checked', false);
++                    });
++                    that.update();
++                }
++            });
++        },
++
++        open: function () {
++            if (this.$choice.hasClass('disabled')) {
++                return;
++            }
++            this.options.isOpen = true;
++            this.$choice.find('>div').addClass('open');
++            this.$drop[this.animateMethod('show')]();
++
++            // fix filter bug: no results show
++            this.$selectAll.parent().show();
++            this.$noResults.hide();
++
++            // Fix #77: 'All selected' when no options
++            if (!this.$el.children().length) {
++                this.$selectAll.parent().hide();
++                this.$noResults.show();
++            }
++
++            if (this.options.container) {
++                var offset = this.$drop.offset();
++                this.$drop.appendTo($(this.options.container));
++                this.$drop.offset({
++                    top: offset.top,
++                    left: offset.left
++                });
++            }
++
++            if (this.options.filter) {
++                this.$searchInput.val('');
++                this.$searchInput.focus();
++                this.filter();
++            }
++            this.options.onOpen();
++        },
++
++        close: function () {
++            this.options.isOpen = false;
++            this.$choice.find('>div').removeClass('open');
++            this.$drop[this.animateMethod('hide')]();
++            if (this.options.container) {
++                this.$parent.append(this.$drop);
++                this.$drop.css({
++                    'top': 'auto',
++                    'left': 'auto'
++                });
++            }
++            this.options.onClose();
++        },
++
++        animateMethod: function (method) {
++            var methods = {
++                show: {
++                    fade: 'fadeIn',
++                    slide: 'slideDown'
++                },
++                hide: {
++                    fade: 'fadeOut',
++                    slide: 'slideUp'
++                }
++            };
++
++            return methods[method][this.options.animate] || method;
++        },
++
++        update: function (isInit) {
++            var selects = this.options.displayValues ? this.getSelects() : this.getSelects('text'),
++                $span = this.$choice.find('>span'),
++                sl = selects.length;
++
++            if (sl === 0) {
++                $span.addClass('placeholder').html(this.options.placeholder);
++            } else if (this.options.allSelected && sl === this.$selectItems.length + this.$disableItems.length) {
++                $span.removeClass('placeholder').html(this.options.allSelected);
++            } else if (this.options.ellipsis && sl > this.options.minimumCountSelected) {
++                $span.removeClass('placeholder').text(selects.slice(0, this.options.minimumCountSelected)
++                    .join(this.options.delimiter) + '...');
++            } else if (this.options.countSelected && sl > this.options.minimumCountSelected) {
++                $span.removeClass('placeholder').html(this.options.countSelected
++                    .replace('#', selects.length)
++                    .replace('%', this.$selectItems.length + this.$disableItems.length));
++            } else {
++                $span.removeClass('placeholder').text(selects.join(this.options.delimiter));
++            }
++
++            if (this.options.addTitle) {
++                $span.prop('title', this.getSelects('text'));
++            }
++
++            // set selects to select
++            this.$el.val(this.getSelects()).trigger('change');
++
++            // add selected class to selected li
++            this.$drop.find('li').removeClass('selected');
++            this.$drop.find('input:checked').each(function () {
++                $(this).parents('li').first().addClass('selected');
++            });
++
++            // trigger <select> change event
++            if (!isInit) {
++                this.$el.trigger('change');
++            }
++        },
++
++        updateSelectAll: function (isInit) {
++            var $items = this.$selectItems;
++
++            if (!isInit) {
++                $items = $items.filter(':visible');
++            }
++            this.$selectAll.prop('checked', $items.length &&
++                $items.length === $items.filter(':checked').length);
++            if (!isInit && this.$selectAll.prop('checked')) {
++                this.options.onCheckAll();
++            }
++        },
++
++        updateOptGroupSelect: function () {
++            var $items = this.$selectItems.filter(':visible');
++            $.each(this.$selectGroups, function (i, val) {
++                var group = $(val).parent().attr('data-group'),
++                    $children = $items.filter(sprintf('[data-group="%s"]', group));
++                $(val).prop('checked', $children.length &&
++                    $children.length === $children.filter(':checked').length);
++            });
++        },
++
++        //value or text, default: 'value'
++        getSelects: function (type) {
++            var that = this,
++                texts = [],
++                values = [];
++            this.$drop.find(sprintf('input[%s]:checked', this.selectItemName)).each(function () {
++                texts.push($(this).parents('li').first().text());
++                values.push($(this).val());
++            });
++
++            if (type === 'text' && this.$selectGroups.length) {
++                texts = [];
++                this.$selectGroups.each(function () {
++                    var html = [],
++                        text = $.trim($(this).parent().text()),
++                        group = $(this).parent().data('group'),
++                        $children = that.$drop.find(sprintf('[%s][data-group="%s"]', that.selectItemName, group)),
++                        $selected = $children.filter(':checked');
++
++                    if (!$selected.length) {
++                        return;
++                    }
++
++                    html.push('[');
++                    html.push(text);
++                    if ($children.length > $selected.length) {
++                        var list = [];
++                        $selected.each(function () {
++                            list.push($(this).parent().text());
++                        });
++                        html.push(': ' + list.join(', '));
++                    }
++                    html.push(']');
++                    texts.push(html.join(''));
++                });
++            }
++            return type === 'text' ? texts : values;
++        },
++
++        setSelects: function (values) {
++            var that = this;
++            this.$selectItems.prop('checked', false);
++            this.$disableItems.prop('checked', false);
++            $.each(values, function (i, value) {
++                that.$selectItems.filter(sprintf('[value="%s"]', value)).prop('checked', true);
++                that.$disableItems.filter(sprintf('[value="%s"]', value)).prop('checked', true);
++            });
++            this.$selectAll.prop('checked', this.$selectItems.length ===
++                this.$selectItems.filter(':checked').length + this.$disableItems.filter(':checked').length);
++
++            $.each(that.$selectGroups, function (i, val) {
++                var group = $(val).parent().attr('data-group'),
++                    $children = that.$selectItems.filter('[data-group="' + group + '"]');
++                $(val).prop('checked', $children.length &&
++                    $children.length === $children.filter(':checked').length);
++            });
++
++            this.update();
++        },
++
++        enable: function () {
++            this.$choice.removeClass('disabled');
++        },
++
++        disable: function () {
++            this.$choice.addClass('disabled');
++        },
++
++        checkAll: function () {
++            this.$selectItems.prop('checked', true);
++            this.$selectGroups.prop('checked', true);
++            this.$selectAll.prop('checked', true);
++            this.update();
++            this.options.onCheckAll();
++        },
++
++        uncheckAll: function () {
++            this.$selectItems.prop('checked', false);
++            this.$selectGroups.prop('checked', false);
++            this.$selectAll.prop('checked', false);
++            this.update();
++            this.options.onUncheckAll();
++        },
++
++        focus: function () {
++            this.$choice.focus();
++            this.options.onFocus();
++        },
++
++        blur: function () {
++            this.$choice.blur();
++            this.options.onBlur();
++        },
++
++        refresh: function () {
++            this.init();
++        },
++
++        filter: function () {
++            var that = this,
++                text = $.trim(this.$searchInput.val()).toLowerCase();
++
++            if (text.length === 0) {
++                this.$selectAll.parent().show();
++                this.$selectItems.parent().show();
++                this.$disableItems.parent().show();
++                this.$selectGroups.parent().show();
++                this.$noResults.hide();
++            } else {
++                this.$selectItems.each(function () {
++                    var $parent = $(this).parent();
++                    $parent[removeDiacritics($parent.text().toLowerCase()).indexOf(removeDiacritics(text)) < 0 ? 'hide' : 'show']();
++                });
++                this.$disableItems.parent().hide();
++                this.$selectGroups.each(function () {
++                    var $parent = $(this).parent();
++                    var group = $parent.attr('data-group'),
++                        $items = that.$selectItems.filter(':visible');
++                    $parent[$items.filter(sprintf('[data-group="%s"]', group)).length ? 'show' : 'hide']();
++                });
++
++                //Check if no matches found
++                if (this.$selectItems.parent().filter(':visible').length) {
++                    this.$selectAll.parent().show();
++                    this.$noResults.hide();
++                } else {
++                    this.$selectAll.parent().hide();
++                    this.$noResults.show();
++                }
++            }
++            this.updateOptGroupSelect();
++            this.updateSelectAll();
++            this.options.onFilter(text);
++        }
++    };
++
++    $.fn.multipleSelect = function () {
++        var option = arguments[0],
++            args = arguments,
++
++            value,
++            allowedMethods = [
++                'getSelects', 'setSelects',
++                'enable', 'disable',
++                'open', 'close',
++                'checkAll', 'uncheckAll',
++                'focus', 'blur',
++                'refresh', 'close'
++            ];
++
++        this.each(function () {
++            var $this = $(this),
++                data = $this.data('multipleSelect'),
++                options = $.extend({}, $.fn.multipleSelect.defaults,
++                    $this.data(), typeof option === 'object' && option);
++
++            if (!data) {
++                data = new MultipleSelect($this, options);
++                $this.data('multipleSelect', data);
++            }
++
++            if (typeof option === 'string') {
++                if ($.inArray(option, allowedMethods) < 0) {
++                    throw 'Unknown method: ' + option;
++                }
++                value = data[option](args[1]);
++            } else {
++                data.init();
++                if (args[1]) {
++                    value = data[args[1]].apply(data, [].slice.call(args, 2));
++                }
++            }
++        });
++
++        return typeof value !== 'undefined' ? value : this;
++    };
++
++    $.fn.multipleSelect.defaults = {
++        name: '',
++        isOpen: false,
++        placeholder: '',
++        selectAll: true,
++        selectAllDelimiter: ['[', ']'],
++        minimumCountSelected: 3,
++        ellipsis: false,
++        multiple: false,
++        multipleWidth: 80,
++        single: false,
++        filter: false,
++        width: undefined,
++        dropWidth: undefined,
++        maxHeight: 250,
++        container: null,
++        position: 'bottom',
++        keepOpen: false,
++        animate: 'none', // 'none', 'fade', 'slide'
++        displayValues: false,
++        delimiter: ', ',
++        addTitle: false,
++        filterAcceptOnEnter: false,
++        hideOptgroupCheckboxes: false,
++
++        selectAllText: 'Select all',
++        allSelected: 'All selected',
++        countSelected: '# of % selected',
++        noMatchesFound: 'No matches found',
++
++        styler: function () {
++            return false;
++        },
++        textTemplate: function ($elm) {
++            return $elm.html();
++        },
++        labelTemplate: function ($elm) {
++            return $elm.attr('label');
++        },
++
++        onOpen: function () {
++            return false;
++        },
++        onClose: function () {
++            return false;
++        },
++        onCheckAll: function () {
++            return false;
++        },
++        onUncheckAll: function () {
++            return false;
++        },
++        onFocus: function () {
++            return false;
++        },
++        onBlur: function () {
++            return false;
++        },
++        onOptgroupClick: function () {
++            return false;
++        },
++        onClick: function () {
++            return false;
++        },
++        onFilter: function () {
++            return false;
++        }
++    };
++})(jQuery);
+diff --git phpcms_code/statics/plugin/multiple_select/multiple-select.png phpcms_code/statics/plugin/multiple_select/multiple-select.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..b1282ce42d52438a36a237dbb6488650272afc65
+GIT binary patch
+literal 3380
+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
+KMNUMnLSTa5X=Ank
+
