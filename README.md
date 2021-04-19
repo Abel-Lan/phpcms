@@ -33,7 +33,7 @@
     {/loop}
     {/pc}
 
-## 三、照片墙功能：游客也可以上传修改方法
+## 三、照片墙功能扩展：游客或其他角色可以上传图片附件的修改方法
 
 >1.phpcms\modules\attachment\attachments.php文件第22行注释掉。内容为：
 
@@ -41,10 +41,7 @@
         //showmessage(L('please_login','','member'));
     }
 
->2.修改数据库，将数据表v9_member_group中游客角色的allowattachment字段由0更改为1。
-
-【后台界面】
-![新版phpcms后台界面](demo1001.png) 
+>2.修改数据库，将数据表v9_member_group中游客角色或其它对应角色的allowattachment字段由0更改为1。
 
 ## 发布版本
 
@@ -103,4 +100,6 @@
     10.修复利用构造referer的xss攻击
     ......
 
- 
+
+【新版本后台界面】
+![新版phpcms后台界面](demo1001.png) 
