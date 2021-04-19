@@ -317,7 +317,7 @@ function _MP(menuid,targetUrl) {
 		$("#current_pos").html(data+'<span id="current_pos_attr"></span>');
 	});
 	$("#current_pos").data('clicknum', 1);
-	show_help(targetUrl);
+	//show_help(targetUrl);
 }
 
 function show_help(targetUrl) {
