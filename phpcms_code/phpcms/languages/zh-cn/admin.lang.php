@@ -551,6 +551,7 @@ $LANG['site_att_watermark_quality'] = 'JPEG 水印质量';
 $LANG['site_att_watermark_quality_desc'] = '水印质量请设置为0-100之间的数字,决定 jpg 格式图片的质量';
 $LANG['site_att_watermark_pos'] = '水印位置';
 $LANG['site_att_watermark_pos_10'] = '随机位置';
+$LANG['site_att_watermark_pos_11'] = '平铺';
 $LANG['site_att_watermark_pos_1'] = '顶部居左';
 $LANG['site_att_watermark_pos_2'] = '顶部居中';
 $LANG['site_att_watermark_pos_3'] = '顶部居右';

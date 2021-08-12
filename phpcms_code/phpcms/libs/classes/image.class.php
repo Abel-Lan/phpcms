@@ -220,11 +220,27 @@ class image {
 				break;
 		}
 		if($ifwaterimage) {
-			if($water_info[2] == 3) {
-				imagecopy($source_img, $water_img, $wx, $wy, 0, 0, $width, $height);
-			} else {
-				imagecopymerge($source_img, $water_img, $wx, $wy, 0, 0, $width, $height, $this->w_pct);
-			}
+            if($water_info[2] == 3) {
+                if($w_pos == 11){
+                    for ($x = 0; $x < $source_w; $x += $width) {
+                        for ($y = 0; $y < $source_h; $y += $height) {
+                            imagecopy($source_img, $water_img, $x, $y, 0, 0, $width, $height);
+                        }
+                    }
+                }else{
+                    imagecopy($source_img, $water_img, $wx, $wy, 0, 0, $width, $height);
+                }
+            } else {
+                if($w_pos == 11){
+                    for ($x = 0; $x < $source_w; $x += $width) {
+                        for ($y = 0; $y < $source_h; $y += $height) {
+                            imagecopymerge($source_img, $water_img, $x, $y, 0, 0, $width, $height, $this->w_pct);
+                        }
+                    }
+                }else{
+                    imagecopymerge($source_img, $water_img, $wx, $wy, 0, 0, $width, $height, $this->w_pct);
+                }
+            }
 		} else {
 			if(!empty($w_color) && (strlen($w_color)==7)) {
 				$r = hexdec(substr($w_color,1,2));

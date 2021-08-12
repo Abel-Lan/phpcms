@@ -544,6 +544,7 @@ $LANG['site_att_watermark_quality'] = 'JPEG watermark quality ';
 $LANG['site_att_watermark_quality_desc'] = 'Watermark quality (0-100) 0 is the worst quality while 100 has the best quality';
 $LANG['site_att_watermark_pos'] = 'Watermark positions';
 $LANG['site_att_watermark_pos_10'] = 'Random position';
+$LANG['site_att_watermark_pos_11'] = 'Tile mask';
 $LANG['site_att_watermark_pos_1'] = 'Left top';
 $LANG['site_att_watermark_pos_2'] = 'Center top';
 $LANG['site_att_watermark_pos_3'] = 'Right top';

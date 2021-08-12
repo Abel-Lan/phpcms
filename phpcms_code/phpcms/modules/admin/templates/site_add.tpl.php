@@ -156,7 +156,10 @@ function default_list() {
     <td class="y-bg">
     <table width="100%" class="radio-label">
   <tr>
-  <td rowspan="3"><input class="radio_style" name="setting[watermark_pos]" value="10" type="radio" > <?php echo L('site_att_watermark_pos_10')?></td>
+  <td rowspan="3">
+      <input class="radio_style" name="setting[watermark_pos]" value="10" type="radio" > <?php echo L('site_att_watermark_pos_10')?><br><br>
+      <input class="radio_style" name="setting[watermark_pos]" value="11" type="radio" > <?php echo L('site_att_watermark_pos_11')?>
+  </td>
     <td><input class="radio_style" name="setting[watermark_pos]" value="1" type="radio" > <?php echo L('site_att_watermark_pos_1')?></td>
 	  <td><input class="radio_style" name="setting[watermark_pos]" value="2" type="radio"> <?php echo L('site_att_watermark_pos_2')?></td>
 	  <td><input class="radio_style" name="setting[watermark_pos]" value="3" type="radio"> <?php echo L('site_att_watermark_pos_3')?></td>
