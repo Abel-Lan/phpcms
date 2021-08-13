@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="renderer" content="webkit">
+	<title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+	<meta name="keywords" content="{$SEO['keyword']}">
+	<meta name="description" content="{$SEO['description']}">
+	<meta name="author" content="Abel Lan" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="applicable-device" content="pc,mobile">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css" crossorigin="anonymous">
+    <link href="{PLUGIN_STATICS_PATH}bootstrap-fileinput/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css"/>
+
+	<link href="{CSS_PATH}upload_photo.css" rel="stylesheet" type="text/css" />
+	<link href="{PLUGIN_STATICS_PATH}Mobiscroll/css/mobiscroll.custom-3.0.0-beta6.min.css" rel="stylesheet" type="text/css" />
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+</head>
+<body class="body-abel abel-upload-case">
+<div class="wrap">
+	<div class="col-left">
+        <div id="Article">
+        	<h1 class="article-title">征集案例照片</h1>
+			<p class="content-detail">
+				上传后请耐心等待，审核通过后方能看到。
+			</p>
+			<div class="container content">
+                <div class="row">
+            <form method="post" enctype="multipart/form-data" action="?m=formguide&c=index&a=show&formid={$formid}&siteid=<?php echo $this->siteid;?>" name="myform" id="myform" class="bootstrap-form form-horizontal">
+            {loop $forminfos_data $field $info}
+                {if $field != 'status'}
+                {if $field == 'img_address'}
+                <div class="form-group">
+                    <label for="img_address" class="col-sm-12"><span style="color: red; ">*</span> 选择照片</label>
+                    <div class="bootstrap-upload-imgs col-sm-12">
+                        <div class="file-loading">
+                            <input id="img_address" class="file-loading" name="img_address[]" type="file" accept="image/*" multiple>
+                        </div>
+                    </div>
+                </div>
+                {elseif $field == 'date'}
+                <div class="form-group">
+                    <label for="date" class="col-sm-2 control-label"><span style="color: red; ">*</span> 拍照日期</label>
+                    <div class="col-sm-10">
+                        <input type="date" name="info[date]" id="date" required="required" class="date" value="" placeholder="请选择..." size="10">
+                    </div>
+                </div>
+                {elseif $field == 'describle'}
+                <div class="form-group">
+                    <label for="describle" class="col-sm-2 control-label"><span style="color: red; ">*</span> 照片描述</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="info[describle]" id="describle" required="required" pattern="([\u4e00-\u9fa5]|[a-zA-Z]|[0-9])([\S]){1,125}" maxlength="125" size="" value="" placeholder="至少2个字符" class="input-text">
+                    </div>
+                </div>
+                {else}
+                {if $info['formtype']=='omnipotent'}
+                    {loop $forminfos_data $_fm $_fm_value}
+                        {if $_fm_value['iscomnipotent']}
+                            {php $info['form'] = str_replace('{'.$_fm.'}',$_fm_value['form'],$info['form']);}
+                        {/if}
+                    {/loop}
+                {/if}
+                <div class="form-group">
+                    <label for="{$field}" class="col-sm-2 control-label">{if $info['star']}<span style="color: red; ">*</span> {/if}{$info['name']}</label>
+                    <div class="col-sm-10">
+                        {php if($info['star']){$info['form'] = str_replace('name=','required="required" name=',$info['form']);}}
+                        {$info['form']}  {$info['tips']}
+                    </div>
+                </div>
+                {/if}
+                {/if}
+            {/loop}
+                <div class="form-group">
+                    <div class="col-sm-12 text-center">
+                        <input type="hidden" name="token" value="{$_SESSION['token']}">
+                        <input type="hidden" name="dosubmit" value="1">
+                        <input type="hidden" name="info[img_address]" value="1">
+                        <input type="hidden" name="ajax_upload_image" value="1">
+                        <input type="button" name="dosubmit" id="dosubmit_imgs" formnovalidate="formnovalidate" class="form-btn btn-submit" value=" 上传 ">
+                    </div>
+                </div>
+            </form>
+                </div>
+            </div>
+      </div>
+  </div>
+</div>
+
+{template "content","footer"}
+
+<script type="text/javascript">
+	jQuery.fn.extend({
+		live: function (event, callback) {
+			if (this.selector) {
+				jQuery(document).on(event, this.selector, callback);
+			}
+		}
+	});
+	jQuery.browser = {};
+	(function () {
+		jQuery.browser.msie = false;
+		jQuery.browser.version = 0;
+		if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+			jQuery.browser.msie = true;
+			jQuery.browser.version = RegExp.$1;
+		}
+	})();
+</script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="{PLUGIN_STATICS_PATH}bootstrap-fileinput/js/plugins/piexif.min.js" type="text/javascript"></script>
+<script src="{PLUGIN_STATICS_PATH}bootstrap-fileinput/js/fileinput.min.js" type="text/javascript"></script>
+<script src="{PLUGIN_STATICS_PATH}bootstrap-fileinput/js/locales/zh.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$('#img_address').fileinput({
+		// theme: 'fas', //fas or gly
+		language: 'zh',
+		uploadUrl: '/index.php?m=formguide&c=index&a=ajax_upload&formid={$formid}&siteid=<?php echo $this->siteid; ?>', // you must set a valid URL here else you will get an error
+		/*enableResumableUpload: true,
+		resumableUploadOptions: {
+			// uncomment below if you wish to test the file for previous partial uploaded chunks
+			// to the server and resume uploads from that point afterwards
+			// testUrl: "http://localhost/test-upload.php"
+		},*/
+		uploadExtraData: {
+			'uploadToken': "<?php echo $_SESSION['token']; ?>", // for access control / security
+			'inputName': "img_address"
+		},
+		maxFileCount: 10,
+		allowedFileTypes: ['image', 'text', 'object'],    // allow only images. ['image', 'video', 'flash']
+		required: true,
+		initialPreviewAsData: true,
+		overwriteInitial: false,
+
+		showRemove: false,//是否显示删除按钮
+		showClose: false,//是否显示关闭按钮
+		showUpload: false,//是否显示上传按钮
+		showCaption: false,//是否显示被选文件的简介
+		showCancel: true,
+		showPreview : true,//是否显示预览
+		showBrowse: true,//是否显示选择按钮
+		browseOnZoneClick: true,
+		enctype: 'multipart/form-data',
+		uploadAsync: true, //false 同步上传，后台用数组接收，true 异步上传，每次上传一个file,会调用多次接口
+		layoutTemplates: {
+			actionUpload: '', //就是让文件上传中的文件去除上传按钮
+			actionDelete: ''  //去除删除按钮
+		},
+
+		allowedFileExtensions: ['jpg', 'png', 'txt', 'doc', 'docx'],
+		browseClass: "btn btn-primary btn-lg",
+		fileType: "any",
+
+		uploadTitle: '请选择案例照片 &hellip;&lt;br>支持多文件同时上传',
+		dropZoneTitle: '请选择案例照片 &hellip; <br>支持多文件同时上传',
+		dropZoneClickTitle: '',
+
+		maxFileSize: 20000,
+		maxFilesNum: 10,
+		maxImageWidth: 2048,
+		resizeImage: true,
+		slugCallback: function (filename) {
+			return filename.replace('(', '_').replace(']', '_');
+		}
+	}).on("filebatchselected", function(event, files) {
+		$(this).fileinput("upload");
+	}).on("fileuploaded", function(event, data, previewId , index , fileId) {
+		if(data.response) {
+			var response = data.response;
+			var img_url = response.fileUrl;
+			var img_alt = response.caption;
+			$("#img_address").after('<input type="hidden" class="' + previewId + '" name="img_address_url[]" value="' + img_url + '">');
+			$("#img_address").after('<input type="hidden" class="' + previewId + '" name="img_address_alt[]" value="' + img_alt + '">');
+			// console.log('File Batch Uploaded', data, previewId , index , fileId);
+		}
+	});
+</script>
+
+<script type="text/javascript" src="{PLUGIN_STATICS_PATH}Mobiscroll/js/mobiscroll.custom-3.0.0-beta6.min.js"></script>
+<script type="text/javascript">
+var isIE = function(ver){
+	var b = document.createElement('b');
+	b.innerHTML = '<!--[if IE ' + ver + ']><i></i><![endif]-->';
+	return b.getElementsByTagName('i').length === 1;
+};
+$(function () {
+	var now = new Date(),
+		min = new Date(now.getFullYear() - 60, now.getMonth(), now.getDate()),
+		max = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+	var ie = isIE();
+	if(ie !== true) {
+		$('#date').mobiscroll().calendar({
+			theme: 'material',
+			lang: 'zh',
+			display: 'center',
+			dateFormat : 'yy-mm-dd',
+			min: min,
+			max: max
+		});
+	}
+	$('#date').removeAttr('readonly');
+});
+</script>
+<script type="text/javascript" src="{PLUGIN_STATICS_PATH}photo_wall/js/zepto.js"></script>
+</body>
+</html>

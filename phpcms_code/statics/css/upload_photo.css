@@ -4,7 +4,7 @@ table.DynarchCalendar-titleCont,table{margin: 0 auto;}
 h1.article-title{text-align:center}
 .content-detail{text-align: center;font-size: 1.3rem;line-height: 2;}
 a:visited{color:#444;}
-.table_form,label{font-size: 1.3rem;}
+.table_form,label{font-size: 1.4rem;}
 .table_form td, .table_form th {padding: 8px 0 8px 8px;}
 .table_form tbody th{width: 35%;color:#444;}
 .table_form tbody td{width: 65%;}
@@ -25,6 +25,8 @@ input#describle{width: 80%;}
 
     div.showMsg{width:90%;max-width:458px;height: auto;position: relative;top:0;left: 0;margin: 100px auto 0 auto;}
     div.showMsg .content.guery a.form-btn{padding: 0 1.75rem;}
+    .file-drop-zone:after{background: url(../images/icon/upload-pic.png) no-repeat center;content: ' ';position: relative;width: 227px;height: 227px;margin:0 auto;}
+    .file-drop-zone-title{display:none}
 }
 @media screen and (max-width: 320px){
     .table_form tbody th{width: 29%;}
@@ -33,11 +35,16 @@ input#describle{width: 80%;}
     input#describle, input.input-text{width: 95%;}
     div.showMsg{width:95%;}
 }
+@media screen and (min-width: 720px){
+    .modal-dialog{margin-top:180px;}
+    .file-drop-zone-title{display:block}
+    .file-drop-zone:after{background:none;display:none}
+}
 #upload_img_mobile{display: none;}
 /*上传成功提示页面*/
 div.showMsg{height: auto;}
 div.showMsg .content.guery{height: auto;background:none;padding: 30px 0 20px 0;}
-div.showMsg .content.guery #continue-add{margin-right: 9px;}
+div.showMsg .content.guery #continue-add{margin-right: 20px;}
 
 .upload_box{
     position: relative;
@@ -98,3 +105,11 @@ div.showMsg .content.guery #continue-add{margin-right: 9px;}
     top: 0;
     opacity: 0;
 }
+/* 多图片上传 - 案例征集 */
+.abel-upload-case *{-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
+.abel-upload-case .content{line-height:initial}
+.bootstrap-form *{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+/*.abel-upload-case .krajee-default .file-footer-caption{margin-bottom:15px}*/
+.abel-upload-case div.btn{height: 45px;line-height: inherit;padding: 10px 30px;background: #2572e6;color: #fff;border-color:#ccc}
+.bootstrap-upload-imgs{text-align:center}
+#dosubmit_imgs{background: #2572e6;color: #fff;}

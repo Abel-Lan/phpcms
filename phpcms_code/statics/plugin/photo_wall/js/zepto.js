@@ -86,48 +86,54 @@ function AbelZepto(obj,fileInfo_v) {
     }
 }
 //上传前检测表单内容
-function fcheckform() {
-    if ($("input[name='img_address']").val() != undefined && $("input[name='img_address']").val() != '') {
-        var file_reg = /\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG|BMP)$/;
-        if (!file_reg.test($("input[name='img_address']").val())) {
-            alert('请选择图片');
-            $("input[name='img_address']").focus();
-            return false;
-        } else {
-            var files = $("input[name='img_address']").prop('files');
-            if(files != undefined){
-                var fileInfo = files[0];
-                if (fileInfo.size > 1024 * 1024 * 8) {
-                    alert('图片不能大于8M，请重新选择图片');
-                    return false;
+function fcheckform(img_tyle,date_check,desc_check) {
+    if(img_tyle === 1){
+        if ($("input[name='img_address']").val() != undefined && $("input[name='img_address']").val() != '') {
+            var file_reg = /\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG|BMP)$/;
+            if (!file_reg.test($("input[name='img_address']").val())) {
+                alert('请选择图片');
+                $("input[name='img_address']").focus();
+                return false;
+            } else {
+                var files = $("input[name='img_address']").prop('files');
+                if(files != undefined){
+                    var fileInfo = files[0];
+                    if (fileInfo.size > 1024 * 1024 * 8) {
+                        alert('图片不能大于8M，请重新选择图片');
+                        return false;
+                    }
                 }
             }
+        } else {
+            alert('图片不能为空！');
+            $("input[name='img_address']").focus();
+            return false;
         }
-    } else {
-        alert('图片不能为空！');
-        $("input[name='img_address']").focus();
-        return false;
     }
 
-    var date_reg = /^(\d{4})-(\d{2})-(\d{2})$/;
-    if (!date_reg.test($('#date').val())) {
-        alert('日期格式错误！格式为2017-01-02');
-        $('#date').focus();
-        return false;
+    if(date_check === 1) {
+        var date_reg = /^(\d{4})-(\d{2})-(\d{2})$/;
+        if (!date_reg.test($('#date').val())) {
+            alert('日期格式错误！格式为2017-01-02');
+            $('#date').focus();
+            return false;
+        }
     }
 
-    var describle_reg = /^([\u4e00-\u9fa5]|[a-zA-Z]|[0-9])([\S]){1,125}/;
-    if (!describle_reg.test($('#describle').val())) {
-        alert('图片描述至少两个字符！');
-        $('#describle').focus();
-        return false;
+    if(desc_check === 1) {
+        var describle_reg = /^([\u4e00-\u9fa5]|[a-zA-Z]|[0-9])([\S]){1,125}/;
+        if (!describle_reg.test($('#describle').val())) {
+            alert('图片描述至少两个字符！');
+            $('#describle').focus();
+            return false;
+        }
     }
 
     return true;
 }
 
 $('#dosubmit').click(function(){
-    if(fcheckform() === true){
+    if(fcheckform(1,1,1) === true){
         saveButtonControllMoreForm($('#dosubmit'), $('#myform'));
     }else{
         return false;
@@ -140,12 +146,20 @@ $('#dosubmit').click(function(){
 var saveControllerMoreForm=true;
 function saveButtonControllMoreForm(obj, formobj){
     if(saveControllerMoreForm){
-        $('#dosubmit').val('上传中');
+        obj.val('上传中');
         $('.last-td').append('<p><b>图片正在上传中……</b></p>');
         saveControllerMoreForm=false;
         formobj.submit();
     }else{
         obj.attr('disabled','disabled');
-        alert('上传中，请无重复点击')
+        alert('上传中，请无重复点击');
     }
 }
+//多图片上传前检测表单内容
+$('#dosubmit_imgs').click(function(){
+    if(fcheckform(0,1,1) === true){
+        saveButtonControllMoreForm($('#dosubmit_imgs'), $('#myform'));
+    }else{
+        return false;
+    }
+});

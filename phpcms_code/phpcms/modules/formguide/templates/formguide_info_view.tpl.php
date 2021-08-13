@@ -19,15 +19,15 @@ if(is_array($forminfos_data)){
 	<tr>
 		<?php
 		/*
-		* ÐÞ¸ÄÕß£ºAbel Lan
-		* ÐÞ¸ÄÈÕÆÚ£º2017-8-28
-		* ÐÞ¸ÄÄ¿µÄ£º±íµ¥ÖÐÇ°Ì¨Ìá½»µÄÍ¼Æ¬£¬ÔÚºóÌ¨²é¿´ÊÇ¿ÉÒÔÔ¤ÀÀ
-		* ÐÞ¸Ä±àºÅ£ºformfuide-preview-photo-001
-		* formfuide-preview-photo-001ÐÞ¸ÄÇ°¿ªÊ¼
+		* ä¿®æ”¹è€…ï¼šAbel Lan
+		* ä¿®æ”¹æ—¥æœŸï¼š2017-8-28
+		* ä¿®æ”¹ç›®çš„ï¼šè¡¨å•ä¸­å‰å°æäº¤çš„å›¾ç‰‡ï¼Œåœ¨åŽå°æŸ¥çœ‹æ˜¯å¯ä»¥é¢„è§ˆ
+		* ä¿®æ”¹ç¼–å·ï¼šformfuide-preview-photo-001
+		* formfuide-preview-photo-001ä¿®æ”¹å‰å¼€å§‹
 		<td><?php echo $fields[$key]['name']?>:</td>
 		<td><?php echo $form?></td>
-		* formfuide-preview-photo-001ÐÞ¸ÄÇ°½áÊø
-		* formfuide-preview-photo-001ÐÞ¸Äºó¿ªÊ¼
+		* formfuide-preview-photo-001ä¿®æ”¹å‰ç»“æŸ
+		* formfuide-preview-photo-001ä¿®æ”¹åŽå¼€å§‹
 		*/
 		?>
 		<?php if( $fields[$key]['formtype'] === 'image') { ?>
@@ -37,7 +37,9 @@ if(is_array($forminfos_data)){
 			<td><?php echo $fields[$key]['name']?>:</td>
 			<td>
 				<?php foreach( $form as $v ){ ?>
-					<a href="<?php echo $v['url'] ;?>" target="_blank"><img src="<?php echo $v['url'] ;?>" style=" height: 100px; float: left; margin-right: 5px; margin-bottom: 5px;"></a>
+                    <a href="javascript:window.top.art.dialog({title:'<?php echo $v['alt']?>',fixed:true, content:'<a href=\'<?php echo $v['url']; ?>\' target=\'_blank\'><img src=\'<?php echo $v['url'] ?>\' style=\'max-height: 551px;\' /></a>'});">
+                        <img src="<?php echo $v['url'] ;?>" style=" height: 100px; float: left; margin-right: 5px; margin-bottom: 5px;">
+                    </a>
 				<?php } ?>
 			</td>
 		<?php }else{ ?>
@@ -45,7 +47,7 @@ if(is_array($forminfos_data)){
 			<td><?php echo $form?></td>
 		<?php } ?>
 		<?php
-		//formfuide-preview-photo-001ÐÞ¸Äºó½áÊø
+		//formfuide-preview-photo-001ä¿®æ”¹åŽç»“æŸ
 		?>
 		</tr>
 <?php 

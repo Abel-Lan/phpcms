@@ -3,11 +3,11 @@ defined('IN_ADMIN') or exit('No permission resources.');
 include $this->admin_tpl('header', 'admin');
 
 /*
- * ĞŞ¸ÄÕß£ºAbel Lan
- * ĞŞ¸ÄÈÕÆÚ£º2017-8-28
- * ĞŞ¸ÄÄ¿µÄ£ºÊ¹ÓÎ¿ÍÒ²¿ÉÒÔÉÏ´«¸½¼ş£¬Ó¦ÓÃÓÚÕÕÆ¬Ç½Í¼Æ¬ÉÏ´«
- * ĞŞ¸Ä±àºÅ£ºphotos-wall-002
- * photos-wall-002Ôö¼Ó´úÂë¿ªÊ¼
+ * ä¿®æ”¹è€…ï¼šAbel Lan
+ * ä¿®æ”¹æ—¥æœŸï¼š2017-8-28
+ * ä¿®æ”¹ç›®çš„ï¼šä½¿æ¸¸å®¢ä¹Ÿå¯ä»¥ä¸Šä¼ é™„ä»¶ï¼Œåº”ç”¨äºç…§ç‰‡å¢™å›¾ç‰‡ä¸Šä¼ 
+ * ä¿®æ”¹ç¼–å·ï¼šphotos-wall-002
+ * photos-wall-002å¢åŠ ä»£ç å¼€å§‹
  */
 $formid = intval($_GET['formid']);
 if($formid === 12) {
@@ -20,11 +20,11 @@ if($formid === 12) {
 					<td width="35">&nbsp;</td>
 					<td>
 						<div class="content-menu blue">
-							<a href="javascript:window.top.art.dialog({id:'add',iframe:'?m=formguide&c=formguide_info&a=public_add&formid=<?php echo $formid?>', title:'Ìí¼ÓĞÅÏ¢', width:'700', height:'500', lock:true});void(0);">
-								<em>Ìí¼ÓĞÅÏ¢</em>
+							<a href="javascript:window.top.art.dialog({id:'add',iframe:'?m=formguide&c=formguide_info&a=public_add&formid=<?php echo $formid?>', title:'æ·»åŠ ä¿¡æ¯', width:'700', height:'500', lock:true});void(0);">
+								<em>æ·»åŠ ä¿¡æ¯</em>
 							</a>
 							<span>|</span>
-							<a href="?m=content&c=index&a=lists&catid=43" target="_blank"><em>Ô¤ÀÀÕÕÆ¬Ç½</em></a>
+							<a href="?m=content&c=index&a=lists&catid=43" target="_blank"><em>é¢„è§ˆç…§ç‰‡å¢™</em></a>
 						</div>
 					</td>
 				</tr>
@@ -34,12 +34,12 @@ if($formid === 12) {
 				<tr>
 					<th width="5%" align="center"><input type="checkbox" value="" id="check_box" onclick="selectall('did[]');"></th>
 					<th width="5%" align="center">ID</th>
-					<th width="15%" align="center">ÕÕÆ¬</th>
-					<th width="25%" align="center">ÃèÊö</th>
-					<th width='10%' align="center">ÅÄÕÕÈÕÆÚ</th>
-					<th width='10%' align="center">ÉÏ´«ÈÕÆÚ</th>
-					<th width='10%' align="center">ÉÏ´«ÕßIP</th>
-					<th width='10%' align="center">ÉóºË×´Ì¬</th>
+					<th width="15%" align="center">ç…§ç‰‡</th>
+					<th width="25%" align="center">æè¿°</th>
+					<th width='10%' align="center">æ‹ç…§æ—¥æœŸ</th>
+					<th width='10%' align="center">ä¸Šä¼ æ—¥æœŸ</th>
+					<th width='10%' align="center">ä¸Šä¼ è€…IP</th>
+					<th width='10%' align="center">å®¡æ ¸çŠ¶æ€</th>
 					<th width="10%" align="center"><?php echo L('operation') ?></th>
 				</tr>
 				</thead>
@@ -54,9 +54,18 @@ if($formid === 12) {
 							</td>
 							<td align="center"><?php echo $d['dataid']?></td>
 							<td align="center">
-								<a href="javascript:window.top.art.dialog({title:'<?php echo $d['describle']?>',fixed:true, content:'<img src=\'<?php echo $d['img_address'] ?>\' style=\'max-height: 551px;\' />'});">
-									<img src="<?php echo $d['img_address'] ?>" style=" height: 50px;">
-								</a>
+                                <?php if (!is_null(json_decode($d['img_address']))){
+                                    $imgs = string2array($d['img_address']);
+                                    foreach( $imgs as $v ){ ?>
+                                        <a href="javascript:window.top.art.dialog({title:'<?php echo $d['describle'] ?>',fixed:true, content:'<a href=\'<?php echo $v['url']; ?>\' target=\'_blank\'><img src=\'<?php echo $v['url'] ?>\' style=\'max-height: 551px;\' /></a>'});">
+                                            <img src="<?php echo $v['url']; ?>" style=" height: 50px; float: left; margin-right: 5px; margin-bottom: 5px;">
+                                        </a>
+                                    <?php }
+                                }else{ ?>
+                                    <a href="javascript:window.top.art.dialog({title:'<?php echo $d['describle']?>',fixed:true, content:'<a href=\'<?php echo $d['img_address']; ?>\' target=\'_blank\'><img src=\'<?php echo $d['img_address'] ?>\' style=\'max-height: 551px;\' /></a>'});">
+                                        <img src="<?php echo $d['img_address'] ?>" style=" height: 50px;">
+                                    </a>
+                                <?php } ?>
 							</td>
 							<td><?php echo $d['describle'] ?></td>
 							<td align="center"><?php echo $d['date'] ?></td>
@@ -64,13 +73,13 @@ if($formid === 12) {
 							<td align="center"><?php echo $d['ip'] ?></td>
 							<td align="center">
 								<?php if($d['status'] == 1){ ?>
-									<font color="green">ÒÑÍ¨¹ı</font>
+									<font color="green">å·²é€šè¿‡</font>
 								<?php }else{ ?>
-									<a href="?m=formguide&c=formguide_info&a=public_pass&formid=<?php echo $formid ?>&did=<?php echo $d['dataid']?>" title="µã»÷ÉóºËÍ¨¹ı"><font color="#ff4500">´ıÉóºË</font></a>
+									<a href="?m=formguide&c=formguide_info&a=public_pass&formid=<?php echo $formid ?>&did=<?php echo $d['dataid']?>" title="ç‚¹å‡»å®¡æ ¸é€šè¿‡"><font color="#ff4500">å¾…å®¡æ ¸</font></a>
 								<?php } ?>
 							</td>
 							<td align="center"><a href="javascript:check('<?php echo $formid ?>', '<?php echo $d['dataid'] ?>', '<?php echo safe_replace($d['username']) ?>');void(0);"><?php echo L('check') ?></a>
-								| <a href="javascript:window.top.art.dialog({id:'add',iframe:'?m=formguide&c=formguide_info&a=public_edit&formid=<?php echo $formid?>&did=<?php echo $d['dataid']?>', title:'±à¼­ĞÅÏ¢--<?php echo $d['describle'] ?>', width:'700', height:'500', lock:true});void(0);">±à¼­</a>
+								| <a href="javascript:window.top.art.dialog({id:'add',iframe:'?m=formguide&c=formguide_info&a=public_edit&formid=<?php echo $formid?>&did=<?php echo $d['dataid']?>', title:'ç¼–è¾‘ä¿¡æ¯--<?php echo $d['describle'] ?>', width:'700', height:'500', lock:true});void(0);">ç¼–è¾‘</a>
 								| <a href="?m=formguide&c=formguide_info&a=public_delete&formid=<?php echo $formid ?>&did=<?php echo $d['dataid'] ?>"
 									onClick="return confirm('<?php echo L('confirm', array('message' => L('delete'))) ?>')"><?php echo L('del') ?></a>
 							</td>
@@ -86,7 +95,7 @@ if($formid === 12) {
 					/<?php echo L('cancel') ?></label>
 				<input name="submit" type="submit" class="button" value="<?php echo L('remove_all_selected') ?>"
 					   onClick="document.myform.action='?m=formguide&c=formguide_info&a=public_delete&formid=<?php echo $formid ?>';return confirm('<?php echo L('affirm_delete') ?>')">&nbsp;&nbsp;
-				<input name="submit" type="submit" class="button" value="ÉóºËÍ¨¹ıÑ¡ÖĞ"
+				<input name="submit" type="submit" class="button" value="å®¡æ ¸é€šè¿‡é€‰ä¸­"
 					   onClick="document.myform.action='?m=formguide&c=formguide_info&a=public_pass&formid=<?php echo $formid ?>'">&nbsp;&nbsp;
 			</div>
 		</div>
@@ -95,7 +104,7 @@ if($formid === 12) {
 </div>
 <?php
 }else{
-//photos-wall-002Ôö¼Ó´úÂë½áÊø
+//photos-wall-002å¢åŠ ä»£ç ç»“æŸ
 ?>
 <div class="pad-lr-10">
 <form name="myform" action="?m=formguide&c=formguide_info&a=delete" method="post">
@@ -136,7 +145,7 @@ if(is_array($datas)){
  <div id="pages"><?php echo $pages;?></div>
 </form>
 </div>
-<?php } //photos-wall-002Ôö¼Ó´úÂë(´ËĞĞ) ?>
+<?php } //photos-wall-002å¢åŠ ä»£ç (æ­¤è¡Œ) ?>
 </body>
 </html>
 <script type="text/javascript">

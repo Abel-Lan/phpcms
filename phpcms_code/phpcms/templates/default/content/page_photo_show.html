@@ -49,6 +49,7 @@
                 <div id="fh5co-board" data-columns>
                     {pc:get sql="SELECT * FROM v9_form_photos WHERE status = 1 ORDER BY date ASC" num="40" page="$page" return="data"}
                     {loop $data $r}
+                    {if (is_null(json_decode($r['img_address'])))}
                     <div class="item">
                         <div class="animate-box">
                             <a href="{$r[img_address]}" class="image-popup fh5co-board-img" title="【{$r[date]}】{$r[describle]}">
@@ -57,6 +58,20 @@
                         </div>
                         <div class="fh5co-desc">【{$r[date]}】<br />{$r[describle]}</div>
                     </div>
+                    {else}
+                    <div class="item">
+                        {php $imgs = string2array($r['img_address']); }
+                        {loop $imgs $k $v}
+                        {php $i = $k + 1;}
+                        <div class="animate-box">
+                            <a href="{$v[url]}" class="image-popup fh5co-board-img" title="【{$r[date]}】{$r[describle]} ({$i})">
+                                <img src="{$v[url]}" alt="{$r[describle]} ({$i})">
+                            </a>
+                        </div>
+                        {/loop}
+                        <div class="fh5co-desc">【{$r[date]}】<br />{$r[describle]}</div>
+                    </div>
+                    {/if}
                     {/loop}{/pc}
                 </div>
                 <div class="more wrap"><div id="pages" class="text-c">{$pages}</div></div>

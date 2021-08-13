@@ -125,7 +125,7 @@ class image {
 		return $filename;
     }
 
-	function watermark($source, $target = '', $w_pos = '', $w_img = '', $w_text = 'phpcms',$w_font = 8, $w_color = '#ff0000') {
+	function watermark($source, $target = '', $w_pos = '', $w_img = '', $w_text = 'BLUEPOST.CN',$w_font = 8, $w_color = '#ff0000') {
 		$w_pos = $w_pos ? $w_pos : $this->w_pos;
 		$w_img = $w_img ? $w_img : $this->w_img;
 		if(!$this->watermark_enable || !$this->check($source)) return false;

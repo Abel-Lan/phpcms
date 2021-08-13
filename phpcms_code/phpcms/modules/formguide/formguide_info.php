@@ -90,7 +90,7 @@ class formguide_info extends admin {
 	private function public_delete_attachment($formid = 0,$did = 0) {
 		if (!$this->tablename || empty($formid) || empty($did)) showmessage(L('illegal_operation'), HTTP_REFERER);
 		$this->db->change_table('model_field');
-		$datas = $this->db->select(array('modelid'=>$formid,'formtype'=>'image'),'*',100,'listorder ASC');
+        $datas = $this->db->select("modelid='$formid' AND formtype IN ('image','images')",'*',100,'listorder ASC');
 		// 将$this->db重新更改为自定义扩展数据表
 		if (!$this->tablename) {
 			$f_info = $this->f_db->get_one(array('modelid'=>$formid, 'siteid'=>$this->get_siteid()), 'tablename');
@@ -104,21 +104,36 @@ class formguide_info extends admin {
 				$filepath = $info[$r['field']];
 				$upload_url = pc_base::load_config('system','upload_url');
 				$url_len = strlen($upload_url);
-				$filepath = substr($filepath,$url_len);
-				$attachment_model = pc_base::load_model('attachment_model');
-				$attachment_result = $attachment_model->get_one(array('module'=>'member','catid'=>'0','filepath'=>$filepath));
-				if($attachment_result){
-					$aid = $attachment_result['aid'];
-					$attachment_index = pc_base::load_model('attachment_index_model');
-					$attachment_index_result = $attachment_index->get_one(array('aid'=>$aid));
-					if(!$attachment_index_result) {
-						$attachment = pc_base::load_sys_class('attachment');
-						$attachment->delete(array('aid'=>$aid));
-					}
-				}
-			}
-		}
-	}
+                $attachment_model = pc_base::load_model('attachment_model');
+                $attachment_index = pc_base::load_model('attachment_index_model');
+                $attachment = pc_base::load_sys_class('attachment');
+                if($r['formtype'] == 'images'){
+                    $file_arr = string2array($filepath);
+                    foreach($file_arr as $v){
+                        $filepath = substr($v['url'],$url_len);
+                        $attachment_result = $attachment_model->get_one(array('module'=>'member','catid'=>'0','filepath'=>$filepath));
+                        if($attachment_result){
+                            $aid = $attachment_result['aid'];
+                            $attachment_index_result = $attachment_index->get_one(array('aid'=>$aid));
+                            if(!$attachment_index_result) {
+                                $attachment->delete(array('aid'=>$aid));
+                            }
+                        }
+                    }
+                }else{
+                    $filepath = substr($filepath,$url_len);
+                    $attachment_result = $attachment_model->get_one(array('module'=>'member','catid'=>'0','filepath'=>$filepath));
+                    if($attachment_result){
+                        $aid = $attachment_result['aid'];
+                        $attachment_index_result = $attachment_index->get_one(array('aid'=>$aid));
+                        if(!$attachment_index_result) {
+                            $attachment->delete(array('aid'=>$aid));
+                        }
+                    }
+                }
+            }
+        }
+    }
 	/**
 	 * 修改者：Abel Lan
 	 * 修改日期：2017-8-28

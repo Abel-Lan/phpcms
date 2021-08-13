@@ -10,6 +10,7 @@ $show_header = 1;
 include $this->admin_tpl('header', 'admin');
 ?>
 <div class="pad-10">
+<form name="myform" id="myform" method="post" action="?m=formguide&c=formguide_info&a=public_add&formid=<?php echo $formid?>" enctype="multipart/form-data">
 <table width="100%" cellspacing="0" class="table-list">
 	<thead>
 		<tr>
@@ -18,7 +19,6 @@ include $this->admin_tpl('header', 'admin');
 		</tr>
 	</thead>
 <tbody>
-<form method="post" action="?m=formguide&c=formguide_info&a=public_add&formid=<?php echo $formid?>">
 <?php
 if(is_array($forminfos_fields)) {
  foreach($forminfos_fields as $field=>$info) {
@@ -44,9 +44,9 @@ if(is_array($forminfos_fields)) {
 	  </th>
       <td><input type="submit" class="button"  value=" <?php echo L('ok')?> "></td>
     </tr>
-</form>
 	</tbody>
 </table>
+</form>
 
 </div>
 </body>
