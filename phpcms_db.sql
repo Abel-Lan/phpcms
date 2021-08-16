@@ -4865,7 +4865,7 @@ INSERT INTO `v9_model` VALUES ('2', '1', '下载模型', '', 'download', '', '0'
 INSERT INTO `v9_model` VALUES ('3', '1', '图片模型', '', 'picture', '', '0', '0', '1', '0', 'default', 'category_picture', 'list_picture', 'show_picture', '', '', '', '', '0', '0');
 INSERT INTO `v9_model` VALUES ('10', '1', '普通会员', '普通会员', 'member_detail', '', '0', '0', '1', '0', '', '', '', '', '', '', '', '', '0', '2');
 INSERT INTO `v9_model` VALUES ('11', '1', '视频模型', '', 'video', '', '0', '0', '1', '0', 'default', 'category_video', 'list_video', 'show_video', '', '', '', '', '0', '0');
-INSERT INTO `v9_model` VALUES ('12', '1', '照片墙', '', 'photos', '{\"enabletime\":\"0\",\"starttime\":\"1504108800\",\"endtime\":\"\",\"sendmail\":\"0\",\"mails\":\"\",\"allowmultisubmit\":\"1\",\"allowunreg\":\"1\"}', '1504108800', '0', '1', '0', 'default', '', '', 'show_upload_photo', 'show_js', '', '', '', '0', '3');
+INSERT INTO `v9_model` VALUES ('12', '1', '照片墙', '', 'photos', '{\"enabletime\":\"0\",\"starttime\":\"1504108800\",\"endtime\":\"\",\"sendmail\":\"0\",\"mails\":\"\",\"allowmultisubmit\":\"1\",\"allowunreg\":\"1\"}', '1504108800', '0', '1', '0', 'default', '', '', 'show_upload_case', 'show_js', '', '', '', '0', '3');
 
 -- ----------------------------
 -- Table structure for v9_model_field
@@ -5012,7 +5012,7 @@ INSERT INTO `v9_model_field` VALUES ('111', '12', '1', 'uploader', '上传者', 
 INSERT INTO `v9_model_field` VALUES ('108', '12', '1', 'date', '拍照日期', '', '', '1', '0', '', '', 'datetime', '{\"fieldtype\":\"date\",\"format\":\"Y-m-d H:i:s\",\"defaulttype\":\"0\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '2', '0', '0');
 INSERT INTO `v9_model_field` VALUES ('109', '12', '1', 'describle', '图片描述', '', '', '1', '0', '', '', 'text', '{\"size\":\"\",\"defaultvalue\":\"\",\"ispassword\":\"0\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '4', '0', '0');
 INSERT INTO `v9_model_field` VALUES ('110', '12', '1', 'status', '审核状态', '', '', '0', '0', '', '', 'box', '{\"options\":\"\\u5ba1\\u6838\\u4e2d|0\\r\\n\\u5ba1\\u6838\\u901a\\u8fc7|1\",\"boxtype\":\"radio\",\"fieldtype\":\"tinyint\",\"minnumber\":\"1\",\"cols\":\"2\",\"width\":\"80\",\"size\":\"1\",\"defaultvalue\":\"0\"}', '', '8', '', '0', '0', '0', '0', '0', '0', '0', '0', '5', '0', '0');
-INSERT INTO `v9_model_field` VALUES ('112', '12', '1', 'img_address', '图片地址', '', '', '1', '0', '', '', 'image', '{\"size\":\"\",\"defaultvalue\":\"\",\"show_type\":\"1\",\"upload_maxsize\":\"2048\",\"upload_allowext\":\"jpg|jpeg|png|bmp\",\"isselectimage\":\"0\",\"images_width\":\"\",\"images_height\":\"\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0');
+INSERT INTO `v9_model_field` VALUES ('112', '12', '1', 'img_address', '选择照片', '', '', '1', '0', '', '', 'images', '{\"upload_allowext\":\"gif|jpg|jpeg|png|bmp\",\"isselectimage\":\"0\",\"upload_number\":\"10\"}', '', '', '', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0');
 
 -- ----------------------------
 -- Table structure for v9_module
@@ -5269,7 +5269,7 @@ CREATE TABLE `v9_form_photos` (
   `username` varchar(20) NOT NULL,
   `datetime` int(10) unsigned NOT NULL,
   `ip` char(15) NOT NULL,
-  `img_address` varchar(255) NOT NULL DEFAULT '',
+  `img_address` mediumtext NOT NULL,
   `date` date DEFAULT NULL,
   `describle` varchar(255) NOT NULL DEFAULT '',
   `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
