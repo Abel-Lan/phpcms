@@ -70,7 +70,7 @@ class attachments {
 					elseif($fileext == 'doc' || $fileext == 'docx') $fileext = 'doc';
 					elseif($fileext == 'xls' || $fileext == 'xlsx') $fileext = 'xls';
 					elseif($fileext == 'ppt' || $fileext == 'pptx') $fileext = 'ppt';
-					elseif ($fileext == 'flv' || $fileext == 'swf' || $fileext == 'rm' || $fileext == 'rmvb') $fileext = 'flv';
+					elseif($fileext == 'flv' || $fileext == 'swf' || $fileext == 'mp4' || $fileext == 'avi' || $fileext == 'rm' || $fileext == 'rmvb') $fileext = 'flv';
 					else $fileext = 'do';
 					echo $aids[0].','.$this->upload_url.$attachment->uploadedfiles[0]['filepath'].','.$fileext.','.$filename;
 				}			

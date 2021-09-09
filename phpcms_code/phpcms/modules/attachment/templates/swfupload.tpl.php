@@ -243,12 +243,6 @@ if($isadmin==0 && !$grouplist[$groupid]['allowattachment']) exit('403');
             });
 
             $('#'+file.id+' a').trigger('click');//自动触发click,选中态
-
-            if(typeof(success_callback) == 'function'){
-                success_callback(arr);
-            }else{
-                //alert('callback err');
-            }
         });
 
         // 文件上传失败，现实上传出错。
