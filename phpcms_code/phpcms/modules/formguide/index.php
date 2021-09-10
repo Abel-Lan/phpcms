@@ -146,7 +146,7 @@ class index{
             else $where = array('ip'=>$ip);
             $re = $this->m_db->get_one($where, 'datetime');
             $setting = string2array($setting);
-            if(($setting['allowmultisubmit'] == 0 && $re['datetime']) || ((SYS_TIME - $re['datetime']) < $this->M['interval'] * 60)){
+            if(($setting['allowmultisubmit'] == 0 && $re['datetime']) || (isset($this->M['interval']) && ((SYS_TIME - $re['datetime']) < $this->M['interval'] * 60))){
                 $_GET['action'] ? exit : showmessage(L('had_participate'), APP_PATH . 'index.php?m=formguide&c=index&a=index');
             }
             require CACHE_MODEL_PATH . 'formguide_form.class.php';
