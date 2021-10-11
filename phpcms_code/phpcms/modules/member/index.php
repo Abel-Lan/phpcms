@@ -614,7 +614,7 @@ class index extends foreground {
 			}
 			
 			$username = isset($_POST['username']) && is_username($_POST['username']) ? trim($_POST['username']) : showmessage(L('username_empty'), HTTP_REFERER);
-			$password = isset($_POST['password']) && trim($_POST['password']) ? trim($_POST['password']) : showmessage(L('password_empty'), HTTP_REFERER);
+			$password = isset($_POST['password']) && trim($_POST['password']) ? addslashes(urldecode(trim($_POST['password']))) : showmessage(L('password_empty'), HTTP_REFERER);
 			is_password($_POST['password']) && is_badword($_POST['password'])==false ? trim($_POST['password']) : showmessage(L('password_format_incorrect'), HTTP_REFERER);
 			$cookietime = intval($_POST['cookietime']);
 			$synloginstr = ''; //同步登陆js代码
