@@ -11,7 +11,7 @@ function utf8_to_gbk($utfstr)
 		$fp = fopen($filename, 'rb');
 		while($l = fgets($fp,15))
 		{        
-			$UC2GBTABLE[hexdec(substr($l, 7, 6))] = hexdec(substr($l, 0, 6));
+			$UC2GBTABLE[hexdec(preg_replace("/[^0-9a-fA-F]/", "", substr($l, 7, 6)))] = hexdec(preg_replace("/[^0-9a-fA-F]/", "", substr($l, 0, 6)));
 		}
 		fclose($fp);
 	}
@@ -58,7 +58,7 @@ function gbk_to_utf8($gbstr)
 		$fp = fopen($filename, 'rb');
 		while($l = fgets($fp,15))
 		{ 
-			$CODETABLE[hexdec(substr($l, 0, 6))] = substr($l, 7, 6); 
+			$CODETABLE[hexdec(preg_replace("/[^0-9a-fA-F]/", "", substr($l, 0, 6)))] = substr($l, 7, 6);
 		}
 		fclose($fp);
 	}
