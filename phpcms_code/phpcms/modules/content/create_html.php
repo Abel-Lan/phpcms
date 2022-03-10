@@ -323,7 +323,7 @@ class create_html extends admin {
 					$forward = "?m=content&c=create_html&a=show&set_catid=1&pagesize=$pagesize&dosubmit=1";
 					showmessage($message,$forward,200);
 				}
-				if(count($catids)==1 && $catids[0]==0) {
+				if(is_array($catids) && count($catids)==1 && $catids[0]==0) {
 					$message = L('create_update_success');
 					$forward = '?m=content&c=create_html&a=show';
 					showmessage($message,$forward,200);
