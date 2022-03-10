@@ -12,7 +12,7 @@
 				$imgstr = '';
 				if($value=='') $value = $copyfrom_link['siteurl'];
 				if($copyfrom_link['thumb']) $imgstr = "<a href='{$copyfrom_link[siteurl]}' target='_blank'><img src='{$copyfrom_link[thumb]}' height='15'></a> ";
-				return $imgstr."<a href='$value' target='_blank' style='color:#AAA'>{$copyfrom_link[sitename]}</a>";
+				return $imgstr."<a href='$value' target='_blank' style='color:#AAA'>{$copyfrom_link['sitename']}</a>";
 			}
 		} else {
 			return $value;

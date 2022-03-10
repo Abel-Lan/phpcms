@@ -6,7 +6,7 @@
 		extract(string2array($setting));
 		$disabled_page = isset($disabled_page) ? $disabled_page : 0;
 		if(!$height) $height = 300;
-		$allowupload = defined('IN_ADMIN') ? 1 : $grouplist['allowattachment'] ? 1: 0;
+		$allowupload = defined('IN_ADMIN') ? 1 : ($grouplist['allowattachment'] ? 1: 0);
 		if(!$value) $value = $defaultvalue;
 		if($minlength || $pattern) $allow_empty = '';
 		if($minlength) $this->formValidator .= '$("#'.$field.'").formValidator({'.$allow_empty.'onshow:"",onfocus:"'.$errortips.'"}).functionValidator({
