@@ -360,7 +360,7 @@ class form {
 		$templates = array();
 		if(is_array($files)) {
 			foreach($files as $file) {
-				if(!preg_match('/^([0-9a-zA-Z_]+)\.html$/i', $file)) continue;
+				if(!preg_match('/^([0-9a-zA-Z_\-]+)\.html$/i', $file)) continue;
 				$key = substr($file, 0, -5);
 				$templates[$key] = isset($names['file_explan'][$localdir][$file]) && !empty($names['file_explan'][$localdir][$file]) ? $names['file_explan'][$localdir][$file].'('.$file.')' : $file;
 			}
