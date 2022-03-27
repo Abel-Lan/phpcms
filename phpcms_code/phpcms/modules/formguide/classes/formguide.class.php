@@ -34,7 +34,24 @@ class formguide {
 			file_put_contents(CACHE_MODEL_PATH.'formguide_'.$classtype.'.class.php',$cache_data);
 			@chmod(CACHE_MODEL_PATH.'formguide_'.$classtype.'.class.php',0777);
 		}
-		return true;
+
+        //更新表单向导的字段缓存
+        $db = pc_base::load_model('sitemodel_model');
+        $datas = $db->select(array('type'=>3));
+        foreach ($datas as $r) {
+            $formid = $r['modelid'];
+            $field_array = array();
+            $db_field = pc_base::load_model('sitemodel_field_model');
+            $fields = $db_field->select(array('modelid'=>$formid,'disabled'=>0),'*',100,'listorder ASC');
+            foreach($fields as $_value) {
+                $setting = string2array($_value['setting']);
+                $_value = array_merge($_value,$setting);
+                $field_array[$_value['field']] = $_value;
+            }
+            setcache('formguide_field_'.$formid,$field_array,'model');
+        }
+
+        return true;
 	}
 }
 ?>
