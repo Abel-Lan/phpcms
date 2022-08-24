@@ -225,7 +225,7 @@ class index extends admin {
 		include $this->admin_tpl('main');
 		$data = ob_get_contents();
 		ob_end_clean();
-		echo $data; //system_information($data);
+		system_information($data);
 	}
 	/**
 	 * 维持 session 登陆状态
