@@ -24,7 +24,8 @@ class update {
         foreach ($site as $list) $sitelist .= $list['domain'].',';
 		$pars = array(
 			'action'=>$action,
-			'phpcms_username'=>'',
+            'server_name'=>$_SERVER['SERVER_NAME'],
+            'server_addr'=>$_SERVER['SERVER_ADDR'],
 			'sitename'=>$sitename,
 			'siteurl'=>$siturl,
 			'charset'=>CHARSET,
@@ -50,7 +51,7 @@ class update {
 	}
 
     function authorization() {
-        $encode = $_SERVER['SERVER_SOFTWARE'] . $_SERVER['SERVER_NAME']. $_SERVER['SERVER_ADDR'] . PHP_VERSION . PHP_OS;
+        $encode = $_SERVER['SERVER_NAME'] . '$-*' . $_SERVER['SERVER_ADDR'];
         return md5 ($encode);
 	}
 
