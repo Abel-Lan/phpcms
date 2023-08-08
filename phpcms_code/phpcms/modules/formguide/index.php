@@ -58,6 +58,11 @@ class index{
             $formguide_input = new formguide_input($formid);
             $data = new_addslashes($_POST['info']);
             $data = new_html_special_chars($data);
+
+            $session_storage = 'session_' . pc_base::load_config('system', 'session_storage');
+            pc_base::load_sys_class($session_storage);
+            session_start();
+            if(isset($_POST['token']) && $_POST['token'] != $_SESSION['token']) showmessage('非法提交或请勿重复提交', HTTP_REFERER);
             /*
              * 修改者：Abel Lan
              * 修改日期：2017-8-28
@@ -66,10 +71,6 @@ class index{
              * */
             //post-img-save-001添加内容开始
             if($formid == 12){
-                $session_storage = 'session_' . pc_base::load_config('system', 'session_storage');
-                pc_base::load_sys_class($session_storage);
-                session_start();
-                if(isset($_POST['token']) && $_POST['token'] != $_SESSION['token']) showmessage('非法提交或请勿重复提交', HTTP_REFERER);
                 $upload_dir = 'PhotosWall/';
                 if(isset($_POST['ajax_upload_image']) && $_POST['ajax_upload_image'] == 1){
 
@@ -130,7 +131,8 @@ class index{
             pc_base::load_sys_class($session_storage);
             session_start();
             $str_rand = random(6, 'abcdefghigklmnopqrstuvwxwyABCDEFGHIGKLMNOPQRSTUVWXWY0123456789');
-            $_SESSION['token'] = md5(microtime(true) . $str_rand);
+            $_SESSION['token'] = $token = md5(microtime(true) . $str_rand);
+            param::set_cookie('token',$token);
             //form-add-token-001添加内容结束
             if($setting['allowunreg'] == 0 && !$userid && $_GET['action'] == 'js'){
                 $no_allowed = 1;

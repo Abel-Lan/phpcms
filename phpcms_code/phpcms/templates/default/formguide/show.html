@@ -27,6 +27,7 @@
 {/loop}
 	</tbody>
 </table>
+<input type="hidden" name="token" id="token" value=""><!-- 若静态化页面，使用$.get方式设置token值，动态页面可以直接使用<input type="hidden" name="token" value="{$_SESSION['token']}">-->
 <input type="submit" name="dosubmit" id="dosubmit" value=" 提交 ">&nbsp;<input type="reset" value=" 取消 ">
 </form>
 			</div>
@@ -57,6 +58,10 @@
         </div>
     </div>
 </div>
+<script>
+	/* 静态化页面时，通过$.get方式获取并设置token值 */
+	$.get("{APP_PATH}api.php", { op: 'token', formid: "{$formid}"}, function(data){$("#token").val(data);});
+</script>
 <script type="text/javascript">
 <!--
 	function show_ajax(obj) {
