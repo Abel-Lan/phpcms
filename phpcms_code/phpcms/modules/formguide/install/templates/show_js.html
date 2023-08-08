@@ -23,7 +23,7 @@
 {/loop}
 <tr>
 <td></td>
-<td><div class="submit ib"><input type="submit"{if $no_allowed} disabled=""{/if} name="dosubmit" id="dosubmit" value=" 提交 "></div> {if $no_allowed}您还没有<a href="{APP_PATH}index.php?m=member&c=index&alogin&forward={urlencode(HTTP_REFERER)}" style="color:red">登录</a>或<a href="" style="color:red">注册</a>网站，请登录后提交表单{/if}</td>
+<td><div class="submit ib"><input type="hidden" name="token" value="{$_SESSION['token']}"><input type="submit"{if $no_allowed} disabled=""{/if} name="dosubmit" id="dosubmit" value=" 提交 "></div> {if $no_allowed}您还没有<a href="{APP_PATH}index.php?m=member&c=index&alogin&forward={urlencode(HTTP_REFERER)}" style="color:red">登录</a>或<a href="" style="color:red">注册</a>网站，请登录后提交表单{/if}</td>
 </tr>
 	</tbody>
 </table>
