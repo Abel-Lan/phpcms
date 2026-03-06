@@ -310,4 +310,7 @@ $LANG['guest_not_allowsearch'] = 'Visitor does not be allow to use search functi
 $LANG['cut_the_picture'] = 'Crop';
 $LANG['moreinfo'] = 'Invoke more info';
 
+$LANG['cdn_refresh_success'] = 'CDN cache refresh successful!';
+$LANG['cdn_refresh_failed'] = 'CDN cache refresh failed';
+$LANG['unknown_error'] = 'Unknown error';
 ?>

@@ -3,7 +3,7 @@ defined('IN_PHPCMS') or exit('No permission resources.');
 pc_base::load_app_func('util','content');
 pc_base::load_sys_func('dir');
 class html {
-	private $siteid,$url,$html_root,$queue,$categorys;
+	private $siteid,$url,$html_root,$queue,$categorys,$cdn_refresh,$cdn_refresh_result;
 	public function __construct() {
 		$this->queue = pc_base::load_model('queue_model');
 		define('HTML',true);
@@ -12,6 +12,81 @@ class html {
 		$this->url = pc_base::load_app_class('url', 'content');
 		$this->html_root = pc_base::load_config('system','html_root');
 		$this->sitelist = getcache('sitelist','commons');
+		// 初始化CDN刷新
+		$this->init_cdn_refresh();
+	}
+
+	/**
+	 * 初始化CDN刷新
+	 */
+	private function init_cdn_refresh() {
+		// 从数据库读取CDN配置
+		$db = pc_base::load_model('module_model');
+		$info = $db->get_one(array('module'=>'admin'));
+		$admin_setting = string2array($info['setting']);
+		$cdn_config = isset($admin_setting['cdn_refresh']) ? $admin_setting['cdn_refresh'] : array('enable' => 0);
+		if ($cdn_config && $cdn_config['enable']) {
+            require_once PC_PATH . 'libs/classes/cdn_refresh.class.php';
+			$endpoint = isset($cdn_config['endpoint']) ? $cdn_config['endpoint'] : 'https://cdn.aliyuncs.com';
+			$cdn_type = isset($cdn_config['cdn_type']) ? $cdn_config['cdn_type'] : 'aliyun_cdn';
+			$this->cdn_refresh = new cdn_refresh($cdn_config['access_key_id'], $cdn_config['access_key_secret'], $endpoint, $cdn_type);
+			$this->cdn_refresh_result = array();
+		} else {
+			$this->cdn_refresh = false;
+			$this->cdn_refresh_result = array();
+		}
+	}
+
+	/**
+	 * 刷新CDN缓存
+	 * @param array $urls 要刷新的URL列表
+	 */
+	private function refresh_cdn($urls) {
+		if ($this->cdn_refresh && !empty($urls)) {
+			// 获取站点域名
+			$site_domain = $this->sitelist[$this->siteid]['domain'];
+			// 构建完整的URL
+			$full_urls = array();
+			foreach ($urls as $url) {
+				// 如果URL不是以http开头，则添加站点域名
+				if (strpos($url, 'http') !== 0) {
+                    $site_domain = rtrim($site_domain, '/');
+                    $url = ltrim($url, '/');
+                    $full_url = $site_domain . '/' . $url;
+				} else {
+					$full_url = $url;
+				}
+				$full_urls[] = $full_url;
+			}
+            // 调用CDN刷新API
+            $result = $this->cdn_refresh->refresh($full_urls);
+            // 存储刷新结果
+            $result['urls'] = $full_urls;
+            $this->cdn_refresh_result[] = $result;
+		}
+	}
+
+	/**
+	 * 获取CDN刷新结果
+	 * @return string 刷新结果列表
+	 */
+	public function get_cdn_refresh_result() {
+        $message = '';
+        if (!empty($this->cdn_refresh_result)) {
+            foreach ($this->cdn_refresh_result as $result) {
+                if (isset($result['success']) && $result['success']) {
+                    $message .= '<br>' . L('cdn_refresh_success');
+                } else {
+                    $message .= '<br><span style="color: red;">' . L('cdn_refresh_failed') . '：' . (isset($result['message']) ? $result['message'] : L('unknown_error')) . '</span>';
+                }
+                if (!empty($result['urls'])) {
+                    foreach ($result['urls'] as $url) {
+                        $message .= $url;
+                    }
+                }
+            }
+        }
+		return $message;
 	}
 
 	/**
@@ -161,6 +236,9 @@ class html {
 					ob_start();
 					include template('content', $template);
 					$this->createhtml($pagefile);
+                    // 刷新CDN缓存
+                    $url = str_replace(PHPCMS_PATH, '', $pagefile);
+                    $this->refresh_cdn(array($url));
 				}
 				return true;
 			}
@@ -169,7 +247,11 @@ class html {
 		$file = PHPCMS_PATH.$file;
 		ob_start();
 		include template('content', $template);
-		return $this->createhtml($file);
+		$status = $this->createhtml($file);
+		// 刷新CDN缓存
+		$url = str_replace(PHPCMS_PATH, '', $file);
+		$this->refresh_cdn(array($url));
+		return $status;
 	}
 
 	/**
@@ -309,7 +391,11 @@ class html {
 		}
 		ob_start();
 		include template('content',$template);
-		return $this->createhtml($file, $copyjs);
+		$status = $this->createhtml($file, $copyjs);
+		// 刷新CDN缓存
+		$url = str_replace(PHPCMS_PATH, '', $file);
+		$this->refresh_cdn(array($url));
+		return $status;
 	}
 	/**
 	 * 更新首页
@@ -334,7 +420,11 @@ class html {
 		$style = $this->sitelist[$siteid]['default_style'];
 		ob_start();
 		include template('content','index',$style);
-		return $this->createhtml($file, 1);
+		$status = $this->createhtml($file, 1);
+		// 刷新CDN缓存
+		$url = str_replace(PHPCMS_PATH, '', $file);
+		$this->refresh_cdn(array($url));
+		return $status;
 	}
 	/**
 	 * 单网页
@@ -401,7 +491,12 @@ class html {
 		if($arrparentid) {
 			$arrparentid = explode(',', $arrparentid);
 			foreach ($arrparentid as $catid) {
-				if($catid) $this->category($catid,1);
+				if($catid) {
+                    $this->category($catid,1);
+                    // 刷新CDN缓存
+                    $url = $this->url->get_list_url($this->categorys[$catid]['setting']['category_ruleid'],'', $this->categorys[$catid]['catdir'], $catid, 1);
+                    $this->refresh_cdn(array('/'.$url));
+                }
 			}
 		}
 	}

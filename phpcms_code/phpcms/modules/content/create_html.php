@@ -304,6 +304,8 @@ class create_html extends admin {
 					$message = L('create_update_success');
 					$forward = '?m=content&c=create_html&a=show';
 				}
+                // 添加CDN刷新结果
+                $message .= $this->html->get_cdn_refresh_result();
 				showmessage($message,$forward,200);
 			} else {
 				//当没有选择模型时，需要按照栏目来更新
@@ -379,6 +381,8 @@ class create_html extends admin {
 					$message = L('start_update').$this->categorys[$catid]['catname']." ...";
 					$forward = "?m=content&c=create_html&a=show&set_catid=1&pagesize=$pagesize&dosubmit=1&autoid=$autoid";
 				}
+                // 添加CDN刷新结果
+                $message .= $this->html->get_cdn_refresh_result();
 				showmessage($message,$forward,200);
 			}
 
@@ -467,6 +471,8 @@ class create_html extends admin {
 				$message = $this->categorys[$catid]['catname'].L('create_update_success');
 				$forward = "?m=content&c=create_html&a=category&set_catid=1&pagesize=$pagesize&dosubmit=1&autoid=$autoid&modelid=$modelid&referer=$referer";
 			}
+			// 添加CDN刷新结果
+			$message .= $this->html->get_cdn_refresh_result();
 			showmessage($message,$forward,200);
 		} else {
 			$show_header = $show_dialog  = '';
@@ -499,7 +505,10 @@ class create_html extends admin {
 	public function public_index() {
 		$this->html = pc_base::load_app_class('html');
 		$size = $this->html->index();
-		showmessage(L('index_create_finish',array('size'=>sizecount($size))));
+        $message = L('index_create_finish',array('size'=>sizecount($size)));
+        // 添加CDN刷新结果
+		$message .= $this->html->get_cdn_refresh_result();
+        showmessage($message);
 	}
 	/**
 	* 批量生成内容页
@@ -532,7 +541,10 @@ class create_html extends admin {
 					}
 					$this->html->show($urls[1],$r,0,'edit',$r['upgrade']);
 				}
-				showmessage(L('operation_success'),HTTP_REFERER);
+                $message = L('operation_success');
+                // 添加CDN刷新结果
+				$message .= $this->html->get_cdn_refresh_result();
+                showmessage($message, HTTP_REFERER);
 			}
 		}
 	}

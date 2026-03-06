@@ -328,4 +328,8 @@ $LANG['models'] = '模型';
 $LANG['video_library'] = '视频库';
 $LANG['can_not_recovered'] = '清理后，不可恢复';
 $LANG['clear'] = '清理';
+
+$LANG['cdn_refresh_success'] = 'CDN缓存刷新成功';
+$LANG['cdn_refresh_failed'] = 'CDN缓存刷新失败';
+$LANG['unknown_error'] = '未知错误';
 ?>

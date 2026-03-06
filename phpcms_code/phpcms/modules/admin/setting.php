@@ -18,7 +18,16 @@ class setting extends admin {
 		extract($setconfig);
 		if(!function_exists('ob_gzhandler')) $gzip = 0;
 		$info = $this->db->get_one(array('module'=>'admin'));
-		extract(string2array($info['setting']));
+		$admin_setting = string2array($info['setting']);
+		extract($admin_setting);
+		// 从数据库中读取CDN配置
+		$cdn_refresh = isset($admin_setting['cdn_refresh']) ? $admin_setting['cdn_refresh'] : array(
+			'enable' => 0,
+			'cdn_type' => 'aliyun_cdn',
+			'endpoint' => 'https://cdn.aliyuncs.com',
+			'access_key_id' => '',
+			'access_key_secret' => '',
+		);
 		$show_header = true;
 		$show_validator = 1;
 		
@@ -43,6 +52,18 @@ class setting extends admin {
 		$setting['mail_from'] = trim($_POST['setting']['mail_from']);		
 		$setting['mail_password'] = trim($_POST['setting']['mail_password']);
 		$setting['errorlog_size'] = trim($_POST['setting']['errorlog_size']);
+
+		//处理CDN刷新配置
+		if (isset($_POST['setconfig']['cdn_refresh'])) {
+			$setting['cdn_refresh'] = array(
+				'enable' => intval($_POST['setconfig']['cdn_refresh']['enable']),
+				'cdn_type' => trim($_POST['setconfig']['cdn_refresh']['cdn_type']),
+				'endpoint' => trim($_POST['setconfig']['cdn_refresh']['endpoint']),
+				'access_key_id' => trim($_POST['setconfig']['cdn_refresh']['access_key_id']),
+				'access_key_secret' => trim($_POST['setconfig']['cdn_refresh']['access_key_secret']),
+			);
+		}
+
 		$setting = array2string($setting);
 		$this->db->update(array('setting'=>$setting), array('module'=>'admin')); //存入admin模块setting字段
 		
@@ -95,6 +116,38 @@ class setting extends admin {
 		$result = $this->db->get_one(array('module'=>'admin'));
 		$setting = string2array($result['setting']);
 		setcache('common', $setting,'commons');
+	}
+
+	/**
+	 * 测试CDN刷新
+	 */
+	public function public_test_cdn_refresh() {
+		// 确保所有必要的参数都存在
+		if (!isset($_POST['test_url']) || !isset($_POST['test_type']) || !isset($_POST['cdn_type']) || !isset($_POST['endpoint']) || !isset($_POST['access_key_id']) || !isset($_POST['access_key_secret'])) {
+			echo json_encode(array('success' => false, 'message' => '缺少必要参数'));
+			return;
+		}
+
+		$test_url = $_POST['test_url'];
+		$test_type = $_POST['test_type'];
+		$cdn_type = $_POST['cdn_type'];
+		$endpoint = $_POST['endpoint'];
+		$access_key_id = $_POST['access_key_id'];
+		$access_key_secret = $_POST['access_key_secret'];
+
+		// 加载CDN刷新类
+		try {
+            require_once PC_PATH . 'libs/classes/cdn_refresh.class.php';
+            $cdn = new cdn_refresh($access_key_id, $access_key_secret, $endpoint, $cdn_type);
+
+            // 执行刷新
+            $result = $cdn->refresh(array($test_url), $test_type);
+
+            // 返回结果
+            echo json_encode($result);
+		} catch (Exception $e) {
+			echo json_encode(array('success' => false, 'message' => '服务器错误：' . $e->getMessage()));
+		}
 	}
 }
 ?>
