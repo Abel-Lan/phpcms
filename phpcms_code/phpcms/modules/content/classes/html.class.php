@@ -41,7 +41,7 @@ class html {
 	 * 刷新CDN缓存
 	 * @param array $urls 要刷新的URL列表
 	 */
-	private function refresh_cdn($urls) {
+    public function refresh_cdn($urls) {
 		if ($this->cdn_refresh && !empty($urls)) {
 			// 获取站点域名
 			$site_domain = $this->sitelist[$this->siteid]['domain'];
@@ -257,7 +257,7 @@ class html {
 	/**
 	 * 生成栏目列表
 	 * @param $catid 栏目id
-	 * @param $page 当前页数
+	 * @param $page 当前页数，0表示生成所有页面
 	 */
 	public function category($catid, $page = 0) {
 		$CAT = $this->categorys[$catid];
@@ -288,6 +288,46 @@ class html {
 			$parentdir = $CATEGORYS[$CAT['parentid']]['catdir'].'/';
 		}
 		
+		//如果page为0，生成所有页面
+		if($page == 0) {
+			//获取栏目下的内容总数
+			$modelid = $CAT['modelid'];
+			$db = pc_base::load_model('content_model');
+			$db->set_model($modelid);
+			$count = $db->count(array('catid'=>$catid, 'status'=>99));
+
+			//计算总页数
+			$pagesize = $setting['list_pagesize'] ? $setting['list_pagesize'] : 20;
+			$total_pages = ceil($count / $pagesize);
+
+			//生成所有页面
+			for($i = 1; $i <= $total_pages; $i++) {
+				$this->generate_category_page($catid, $i, $CAT, $CATEGORYS, $setting, $create_to_html_root, $parentdir, $catdir, $siteid, $SEO);
+			}
+		} else {
+			//生成指定页面
+			$this->generate_category_page($catid, $page, $CAT, $CATEGORYS, $setting, $create_to_html_root, $parentdir, $catdir, $siteid, $SEO);
+		}
+
+		return true;
+	}
+
+	/**
+	 * 生成单个栏目页面
+	 * @param $catid 栏目id
+	 * @param $page 当前页数
+	 * @param $CAT 栏目信息
+	 * @param $CATEGORYS 所有栏目信息
+	 * @param $setting 栏目设置
+	 * @param $create_to_html_root 是否生成到根目录
+	 * @param $parentdir 父目录
+	 * @param $catdir 栏目目录
+	 * @param $siteid 站点id
+	 * @param $SEO SEO信息
+	 */
+	private function generate_category_page($catid, $page, $CAT, $CATEGORYS, $setting, $create_to_html_root, $parentdir, $catdir, $siteid, $SEO) {
+		$copyjs = '';
+
 		$base_file = $this->url->get_list_url($setting['category_ruleid'],$parentdir, $catdir, $catid, $page);
 		$base_file = '/'.$base_file;
 		
@@ -304,7 +344,7 @@ class html {
 		$root_domain = preg_match('/^((http|https):\/\/)([a-z0-9\-\.]+)\/$/',$CAT['url']) ? 1 : 0;
 		$count_number = substr_count($CAT['url'], '/');
 		$urlrules = getcache('urlrules','commons');
-		$urlrules = explode('|',$urlrules[$category_ruleid]);
+		$urlrules = explode('|',$urlrules[$CAT['category_ruleid']]);
 		
 		if($create_to_html_root) {
 			if($this->siteid==1) {
@@ -352,14 +392,14 @@ class html {
 			}
 		}
 
-		if($type==0) {
+		if($CAT['type']==0) {
 			$template = $setting['category_template'] ? $setting['category_template'] : 'category';
 			$template_list = $setting['list_template'] ? $setting['list_template'] : 'list';
-			$template = $child ? $template : $template_list;
-			$arrparentid = explode(',', $arrparentid);
+			$template = $CAT['child'] ? $template : $template_list;
+			$arrparentid = explode(',', $CAT['arrparentid']);
 			$top_parentid = $arrparentid[1] ? $arrparentid[1] : $catid;
 			$array_child = array();
-			$self_array = explode(',', $arrchildid);
+			$self_array = explode(',', $CAT['arrchildid']);
 			foreach ($self_array as $arr) {
 				if($arr!=$catid) $array_child[] = $arr;
 			}

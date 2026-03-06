@@ -290,7 +290,8 @@ class content extends admin {
 			$search_model = getcache('search_model_'.$this->siteid,'search');
 			$typeid = $search_model[$modelid]['typeid'];
 			$this->url = pc_base::load_app_class('url', 'content');
-			
+            $html = pc_base::load_app_class('html', 'content');
+
 			foreach($_POST['ids'] as $id) {
 				$r = $this->db->get_one(array('id'=>$id));
 				if($content_ishtml && !$r['islink']) {
@@ -313,6 +314,8 @@ class content extends admin {
 						//删除发布点队列数据
 						$delfile = str_replace(PHPCMS_PATH, '/', $delfile);
 						$this->queue->add_queue('del',$delfile,$this->siteid);
+                        // 刷新被删除页面的CDN链接
+                        $html->refresh_cdn(array($delfile));
 					}
 				} else {
 					$fileurl = 0;
@@ -343,6 +346,17 @@ class content extends admin {
  			}
 			//更新栏目统计
 			$this->db->cache_items();
+
+			//更新静态页面
+			if($content_ishtml) {
+				//更新列表页
+				$html->category($catid);
+				//更新首页
+				$html->index();
+				//更新相关页面
+				$html->create_relation_html($catid);
+			}
+
 			showmessage(L('operation_success'),HTTP_REFERER);
 		} else {
 			showmessage(L('operation_failure'));
