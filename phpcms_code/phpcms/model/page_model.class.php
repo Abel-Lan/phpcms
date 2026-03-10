@@ -10,8 +10,13 @@ class page_model extends model {
 		parent::__construct();
 	}
 	public function create_html($catid) {
-		$this->html = pc_base::load_app_class('html', 'content');
-		$this->html->category($catid,1);
+        // 初始化html对象
+        $html = pc_base::load_app_class('html', 'content');
+        // 生成页面并获取生成的URL
+        $generated_urls = $html->category($catid, 1);
+        if(!empty($generated_urls)) {
+            $html->refresh_cdn($generated_urls);
+        }
 	}
 }
 ?>

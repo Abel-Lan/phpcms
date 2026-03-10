@@ -80,8 +80,9 @@ class html {
                     $message .= '<br><span style="color: red;">' . L('cdn_refresh_failed') . '：' . (isset($result['message']) ? $result['message'] : L('unknown_error')) . '</span>';
                 }
                 if (!empty($result['urls'])) {
+                    $message .= '<br>';
                     foreach ($result['urls'] as $url) {
-                        $message .= $url;
+                        $message .= $url . '<br>';
                     }
                 }
             }
@@ -288,6 +289,9 @@ class html {
 			$parentdir = $CATEGORYS[$CAT['parentid']]['catdir'].'/';
 		}
 		
+		// 存储生成的页面URL
+		$generated_urls = array();
+
 		//如果page为0，生成所有页面
 		if($page == 0) {
 			//获取栏目下的内容总数
@@ -302,14 +306,20 @@ class html {
 
 			//生成所有页面
 			for($i = 1; $i <= $total_pages; $i++) {
-				$this->generate_category_page($catid, $i, $CAT, $CATEGORYS, $setting, $create_to_html_root, $parentdir, $catdir, $siteid, $SEO);
+				$url = $this->generate_category_page($catid, $i, $CAT, $CATEGORYS, $setting, $create_to_html_root, $parentdir, $catdir, $siteid, $SEO);
+				if($url) {
+					$generated_urls[] = $url;
+				}
 			}
 		} else {
 			//生成指定页面
-			$this->generate_category_page($catid, $page, $CAT, $CATEGORYS, $setting, $create_to_html_root, $parentdir, $catdir, $siteid, $SEO);
+			$url = $this->generate_category_page($catid, $page, $CAT, $CATEGORYS, $setting, $create_to_html_root, $parentdir, $catdir, $siteid, $SEO);
+			if($url) {
+				$generated_urls[] = $url;
+			}
 		}
 
-		return true;
+		return $generated_urls;
 	}
 
 	/**
@@ -432,10 +442,8 @@ class html {
 		ob_start();
 		include template('content',$template);
 		$status = $this->createhtml($file, $copyjs);
-		// 刷新CDN缓存
-		$url = str_replace(PHPCMS_PATH, '', $file);
-		$this->refresh_cdn(array($url));
-		return $status;
+		// 返回生成的页面URL
+		return $base_file;
 	}
 	/**
 	 * 更新首页
@@ -462,8 +470,7 @@ class html {
 		include template('content','index',$style);
 		$status = $this->createhtml($file, 1);
 		// 刷新CDN缓存
-		$url = str_replace(PHPCMS_PATH, '', $file);
-		$this->refresh_cdn(array($url));
+        $this->refresh_cdn(array('/'));
 		return $status;
 	}
 	/**
@@ -518,13 +525,26 @@ class html {
 	* @param $catid
 	*/
 	public function create_relation_html($catid) {
+        // 收集需要刷新的URL
+        $refresh_urls = array();
+
 		$page = 1;
 		$pagesize = isset($pagesize) ? $pagesize : 20;
 		do {
-			$this->category($catid,$page);
+            // 生成页面并获取生成的 URL
+            $generated_urls = $this->category($catid, $page);
+            // 收集需要刷新的URL
+            if(!empty($generated_urls) && is_array($generated_urls)) {
+                $refresh_urls = array_merge($refresh_urls, $generated_urls);
+            }
 			$page++;
 			$total_number = isset($total_number) ? $total_number : PAGES;
 		} while ($page <= $total_number && $page < $pagesize);
+
+		// 收集当前栏目根路径
+		if(!empty($this->categorys[$catid]['url'])) {
+			$refresh_urls[] = $this->categorys[$catid]['url'];
+		}
 
 		//检查当前栏目的父栏目，如果存在则生成
 		$arrparentid = $this->categorys[$catid]['arrparentid'];
@@ -532,12 +552,24 @@ class html {
 			$arrparentid = explode(',', $arrparentid);
 			foreach ($arrparentid as $catid) {
 				if($catid) {
-                    $this->category($catid,1);
-                    // 刷新CDN缓存
-                    $url = $this->url->get_list_url($this->categorys[$catid]['setting']['category_ruleid'],'', $this->categorys[$catid]['catdir'], $catid, 1);
-                    $this->refresh_cdn(array('/'.$url));
+			        // 生成页面
+                    $generated_urls = $this->category($catid,1);
+			        // 收集需要刷新的URL
+                    if(!empty($generated_urls) && is_array($generated_urls)) {
+                        $refresh_urls = array_merge($refresh_urls, $generated_urls);
+                    }
+			        // 收集父栏目根路径
+			        if(!empty($this->categorys[$catid]['url'])) {
+			            $refresh_urls[] = $this->categorys[$catid]['url'];
+			        }
                 }
 			}
 		}
+
+        // 去重并一次性刷新所有URL
+        $refresh_urls = array_unique($refresh_urls);
+        if(!empty($refresh_urls)) {
+            $this->refresh_cdn($refresh_urls);
+        }
 	}
 }
