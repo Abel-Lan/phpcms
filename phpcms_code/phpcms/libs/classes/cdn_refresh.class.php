@@ -72,7 +72,7 @@ class cdn_refresh {
                 'SignatureNonce' => uniqid(),
                 'SignatureVersion' => '1.0',
                 'Timestamp' => gmdate('Y-m-d\TH:i:s\Z'),
-                'ObjectPath' => implode('\n', $urls),
+                'ObjectPath' => implode("\n", $urls),
                 'ObjectType' => $type
             );
         } else {
@@ -86,7 +86,7 @@ class cdn_refresh {
                 'SignatureNonce' => uniqid(),
                 'SignatureVersion' => '1.0',
                 'Timestamp' => gmdate('Y-m-d\TH:i:s\Z'),
-                'ObjectPath' => implode('\n', $urls),
+                'ObjectPath' => implode("\n", $urls),
                 'ObjectType' => $type
             );
         }
@@ -173,7 +173,7 @@ class cdn_refresh {
             'timestamp' => $timestamp,
             'sign' => $signature,
             'type' => $type == 'dir' ? 'directory' : 'file',
-            'urlList' => implode('\n', $urls)
+            'urlList' => implode("\n", $urls)
         );
 
         // 发送请求
