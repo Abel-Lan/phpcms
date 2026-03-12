@@ -469,10 +469,6 @@ class create_html extends admin {
 				$j++;
 				$total_number = isset($total_number) ? $total_number : PAGES;
 			} while ($j <= $total_number && $j < $pagesize);
-            // 收集当前栏目根路径
-            if(!empty($this->categorys[$catid]['url'])) {
-                $refresh_urls[] = $this->categorys[$catid]['url'];
-            }
 			if($page <= $total_number) {
 				$endpage = intval($page+$pagesize);
 				$message = L('updating').$this->categorys[$catid]['catname'].L('start_to_end_id',array('page'=>$page,'endpage'=>$endpage));
@@ -481,6 +477,10 @@ class create_html extends admin {
 				$autoid++;
 				$message = $this->categorys[$catid]['catname'].L('create_update_success');
 				$forward = "?m=content&c=create_html&a=category&set_catid=1&pagesize=$pagesize&dosubmit=1&autoid=$autoid&modelid=$modelid&referer=$referer";
+                // 收集当前栏目根路径
+                if(!empty($this->categorys[$catid]['url'])) {
+                    $refresh_urls[] = $this->categorys[$catid]['url'];
+                }
 			}
             // 去重并一次性刷新所有URL
             $refresh_urls = array_unique($refresh_urls);
