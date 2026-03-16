@@ -439,6 +439,9 @@ class html {
 			$keywords = $keywords ? $keywords : $setting['meta_keywords'];
 			$SEO = seo($siteid, 0, $title,$setting['meta_description'],$keywords);
 		}
+        // 初始化modelid变量，用于模板中的物料和产量筛选
+        @extract($CAT);
+        $modelid = $CAT['modelid'];
 		ob_start();
 		include template('content',$template);
 		$status = $this->createhtml($file, $copyjs);
