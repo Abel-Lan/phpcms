@@ -33,8 +33,8 @@
             <li id="tab_swf_1" class="on" onclick="SwapTab('swf','on','',5,1);"><?php echo L('upload_attachment')?></li>
             <li id="tab_swf_2" onclick="SwapTab('swf','on','',5,2);"><?php echo L('net_file')?></li>
             <?php if($allowupload && $this->admin_username && $_SESSION['userid']) {?>
-                <li id="tab_swf_3" onclick="SwapTab('swf','on','',5,3);set_iframe('album_list','index.php?m=attachment&c=attachments&a=album_load&args=<?php echo $args?>');"><?php echo L('gallery')?></li>
-                <li id="tab_swf_4" onclick="SwapTab('swf','on','',5,4);set_iframe('album_dir','index.php?m=attachment&c=attachments&a=album_dir&args=<?php echo $args?>');"><?php echo L('directory_browse')?></li>
+                <li id="tab_swf_3" onclick="SwapTab('swf','on','',5,3);set_iframe('album_list','index.php?m=attachment&c=attachments&a=album_load&args=<?php echo urlencode($args)?>');"><?php echo L('gallery')?></li>
+                <li id="tab_swf_4" onclick="SwapTab('swf','on','',5,4);set_iframe('album_dir','index.php?m=attachment&c=attachments&a=album_dir&args=<?php echo urlencode($args)?>');"><?php echo L('directory_browse')?></li>
             <?php }?>
             <?php if($att_not_used!='') {?>
                 <li id="tab_swf_5" class="icon" onclick="SwapTab('swf','on','',5,5);"><?php echo L('att_not_used')?></li>
@@ -135,14 +135,14 @@ if($isadmin==0 && !$grouplist[$groupid]['allowattachment']) exit('403');
             swf: '<?php echo PLUGIN_STATICS_PATH?>webuploader/Uploader.swf',
 
             // 文件接收服务端。
-            server: '/index.php?m=attachment&c=attachments&a=swfupload&dosubmit=1',
+            server: 'index.php?m=attachment&c=attachments&a=swfupload&dosubmit=1',
 
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.
             pick: '#filePicker',
             fileVal : 'Filedata',
-            fileNumLimit : '<?php echo $file_upload_limit;?>',
-            fileSingleSizeLimit : '<?php echo $site_setting['upload_maxsize']*1024;?>',
+            fileNumLimit : <?php echo intval($file_upload_limit);?>,
+            fileSingleSizeLimit : <?php echo intval($site_setting['upload_maxsize']) * 1024; ?>,
             formData: {
                 dosubmit: 1,
                 swf_auth_key : '<?php echo $swf_auth_key;?>',
@@ -180,9 +180,7 @@ if($isadmin==0 && !$grouplist[$groupid]['allowattachment']) exit('403');
             uploader.makeThumb( file, function( error, src ) {
                 if ( error ) {
                     var img_ext_array = new Array('jpg', 'jpeg', 'gif', 'png', 'bmp');
-                    console.info(file);
                     if( img_ext_array.indexOf(file.ext) > -1 ){
-                        //TODO 浏览器不支持data URI缩略图
                         $img.replaceWith('<span>不能预览</span>');
                     }
                     else{//其他文件,调取对应的ico
@@ -224,6 +222,32 @@ if($isadmin==0 && !$grouplist[$groupid]['allowattachment']) exit('403');
             $percent.html(percent_value + '%');
         });
 
+        uploader.on( 'error', function( code, max, file ) {
+            var msg = '';
+            if(code == 'F_EXCEED_SIZE') {
+                var display_limit = <?php echo intval($site_setting['upload_maxsize']); ?>;
+                msg = (file ? file.name + ' - ' : '') + '文件超过允许大小(限定: ' + (display_limit >= 1024 ? (display_limit/1024).toFixed(1) + 'MB' : display_limit + 'KB') + ')';
+            } else if(code == 'Q_EXCEED_NUM_LIMIT') {
+                msg = '文件数量超过限制(最多' + '<?php echo $file_upload_limit;?>' + '个)';
+            } else if(code == 'Q_TYPE_DENIED' || code == 'F_TYPE_INVALID') {
+                msg = (file ? file.name + ' - ' : '') + '不支持的文件类型';
+            } else if(code == 'F_DUPLICATE') {
+                msg = (file ? file.name + ' - ' : '') + '文件已在上传队列中';
+            } else {
+                msg = '上传错误(' + code + ')';
+            }
+
+            var $existing = file ? $( '#'+file.id ) : $();
+            if($existing.length) {
+                if(!$existing.find('div.error').length) {
+                    $existing.append('<div class="error" style="color:red;font-size:12px;padding:2px;">' + msg + '</div>');
+                }
+            } else {
+                $list.find('div[style*="fff0f0"]').remove();
+                $list.append('<div style="color:red;font-size:12px;padding:4px 8px;margin:2px 0;background:#fff0f0;border:1px solid #ffcccc;border-radius:3px;">⚠ ' + msg + '</div>');
+            }
+        });
+
         // 文件上传成功，给item添加成功class, 用样式标记上传成功。
         uploader.on( 'uploadSuccess', function( file,data ) {
             dat = data._raw;
@@ -231,6 +255,17 @@ if($isadmin==0 && !$grouplist[$groupid]['allowattachment']) exit('403');
             var name = arr[3];
             var path = arr[1];
             var file_id = arr[0];
+
+            if(file_id == '0') {
+                var $li = $( '#'+file.id );
+                var error_msg = arr.slice(1).join(',');
+                if(!$li.find('div.error').length) {
+                    $li.append('<div class="error" style="color:red;font-size:12px;padding:2px;">' + error_msg + '</div>');
+                }
+                return;
+            }
+            $list.find('div.error').remove();
+            $list.find('div[style*="fff0f0"]').remove();
 
             $('#'+file.id).addClass('upload-state-done');
 
@@ -338,7 +373,7 @@ if($isadmin==0 && !$grouplist[$groupid]['allowattachment']) exit('403');
             var imgstr = $("#att-status").html();
             var length = $("a[class='on']").children("img").length;
             var strs = filenames = '';
-            $.get('/index.php?m=attachment&c=attachments&a=swfupload_json_del&aid='+id+'&src='+source+'&filename='+filename);
+            $.get('index.php?m=attachment&c=attachments&a=swfupload_json_del&aid='+id+'&src='+encodeURIComponent(source)+'&filename='+encodeURIComponent(filename));
             for(var i=0;i<length;i++){
                 strs += '|'+$("a[class='on']").children("img").eq(i).attr('path');
                 filenames += '|'+$("a[class='on']").children("img").eq(i).attr('title');
@@ -350,7 +385,7 @@ if($isadmin==0 && !$grouplist[$groupid]['allowattachment']) exit('403');
             var file_upload_limit = '<?php echo $file_upload_limit?>';
             if(num > file_upload_limit) {alert('<?php echo L('attachment_tip1')?>'+file_upload_limit+'<?php echo L('attachment_tip2')?>'); return false;}
             $(obj).addClass("on");
-            $.get('/index.php?m=attachment&c=attachments&a=swfupload_json&aid='+id+'&src='+source+'&filename='+filename);
+            $.get('index.php?m=attachment&c=attachments&a=swfupload_json&aid='+id+'&src='+encodeURIComponent(source)+'&filename='+encodeURIComponent(filename));
             $('#att-status').append('|'+src);
             $('#att-name').append('|'+filename);
         }

@@ -43,7 +43,7 @@ function album_cancel(obj,id,source){
 		var imgstr = parent.window.$("#att-status").html();
 		var length = $("a[class='on']").children("img").length;
 		var strs = filenames = '';
-		$.get('index.php?m=attachment&c=attachments&a=swfupload_json_del&aid='+id+'&src='+source);
+		$.get('index.php?m=attachment&c=attachments&a=swfupload_json_del&aid='+id+'&src='+encodeURIComponent(source));
 		for(var i=0;i<length;i++){
 			strs += '|'+$("a[class='on']").children("img").eq(i).attr('path');
 			filenames += '|'+$("a[class='on']").children("img").eq(i).attr('title');
@@ -55,7 +55,7 @@ function album_cancel(obj,id,source){
 		var file_upload_limit = '<?php echo $file_upload_limit?>';
 		if(num > file_upload_limit) {alert('不能选择超过'+file_upload_limit+'个附件'); return false;}
 		$(obj).addClass("on");
-		$.get('index.php?m=attachment&c=attachments&a=swfupload_json&aid='+id+'&src='+source);
+		$.get('index.php?m=attachment&c=attachments&a=swfupload_json&aid='+id+'&src='+encodeURIComponent(source));
 		parent.window.$('#att-status').append('|'+src);
 		parent.window.$('#att-name').append('|'+filename);
 	}

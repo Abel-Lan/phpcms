@@ -1,0 +1,33 @@
+# JetBrains IDE
+.idea/
+
+# VS Code
+.vscode/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# PHPCMS - 运行时缓存 + 本地配置
+phpcms_code/caches/
+
+# PHPCMS - 静态 HTML 输出目录
+phpcms_code/html/
+
+# PHPCMS - 上传文件目录
+phpcms_code/uploadfile/
+
+# PHP 日志
+*.log
+
+# Composer
+vendor/
+composer.lock
+
+# Node
+node_modules/
+
+# 构建产物
+*.min.js
+*.min.css

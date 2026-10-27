@@ -38,12 +38,14 @@ class attachments {
 		$site_allowext = $site_setting['upload_allowext'];		
 		$attachment = new attachment($module,$catid,$siteid);
 		$attachment->set_userid($this->userid);
+		$fn = isset($_GET['CKEditorFuncNum']) ? intval($_GET['CKEditorFuncNum']) : 1;
 		$a = $attachment->upload('upload',$site_allowext);
 		if($a){
 			$filepath = $attachment->uploadedfiles[0]['filepath'];
-			$fn = intval($_GET['CKEditorFuncNum']);
-			$this->upload_json($a[0],$filepath,$attachment->uploadedfiles[0]['filename']);
+			$this->upload_json($a[0],$this->upload_url.$filepath,$attachment->uploadedfiles[0]['filename']);
 			$attachment->mkhtml($fn,$this->upload_url.$filepath,'');
+		} else {
+			$attachment->mkhtml($fn,'',$attachment->error());
 		}
 	}
 	/**
@@ -76,7 +78,14 @@ class attachments {
 				}			
 				exit;
 			} else {
-				echo '0,'.$attachment->error();
+				$uploaded_size = isset($_FILES['Filedata']['size']) ? intval($_FILES['Filedata']['size']) : 0;
+				$uploaded_kb = round($uploaded_size / 1024, 1);
+				$uploaded_display = $uploaded_kb >= 1024 ? round($uploaded_kb / 1024, 1).'MB' : $uploaded_kb.'KB';
+				$msg = $attachment->error();
+				if($attachment->error == 11 && $uploaded_size) {
+					$msg .= '(您上传的文件: '.$uploaded_display.')';
+				}
+				echo '0,'.$msg;
 				exit;
 			}
 

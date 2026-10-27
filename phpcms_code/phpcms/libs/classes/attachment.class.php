@@ -37,11 +37,14 @@ class attachment {
 			$this->error = UPLOAD_ERR_OK;
 			return false;
 		}
+		$site_setting = $this->_get_site_setting($this->siteid);
 		if(empty($alowexts) || $alowexts == '') {
-			$site_setting = $this->_get_site_setting($this->siteid);
 			$alowexts = $site_setting['upload_allowext'];
 		}
-		$fn = $_GET['CKEditorFuncNum'] ? $_GET['CKEditorFuncNum'] : '1';
+		if(empty($maxsize)) {
+			$maxsize = intval($site_setting['upload_maxsize']) * 1024;
+		}
+		$fn = isset($_GET['CKEditorFuncNum']) ? intval($_GET['CKEditorFuncNum']) : 1;
 			
 		$this->field = $field;
 		$this->savepath = $this->upload_root.$this->upload_dir.date('Y/md/');
@@ -78,10 +81,6 @@ class attachment {
 
 		if(!is_writeable($this->savepath)) {
 			$this->error = '9';
-			return false;
-		}
-		if(!$this->is_allow_upload()) {
-			$this->error = '13';
 			return false;
 		}
 		$aids = array();
@@ -347,16 +346,6 @@ class attachment {
 	}
 
 	/**
-	 * 是否允许上传
-	 */
-	function is_allow_upload() {
-        if($_groupid == 1) return true;
-		$starttime = SYS_TIME-86400;
-		$site_setting = $this->_get_site_setting($this->siteid);
-		return ($uploads < $site_setting['upload_maxsize']);
-	}
-	
-	/**
 	 * 返回错误信息
 	 */
 	function error() {
@@ -377,7 +366,14 @@ class attachment {
 		13 => L('att_upload_limit_time'),
 		);
 		
-		return iconv(CHARSET,"utf-8",$UPLOAD_ERROR[$this->error]);
+		$msg = iconv(CHARSET,"utf-8",$UPLOAD_ERROR[$this->error]);
+		if($this->error == 11 && $this->maxsize) {
+			$size_kb = round($this->maxsize / 1024, 1);
+			$display_size = $size_kb >= 1024 ? round($size_kb / 1024, 1) : $size_kb;
+			$unit = $size_kb >= 1024 ? 'MB' : 'KB';
+			$msg .= '(限定: '.$display_size.$unit.')';
+		}
+		return $msg;
 	}
 	
 	/**
@@ -388,6 +384,9 @@ class attachment {
 	 */
 	
 	function mkhtml($fn,$fileurl,$message) {
+		$fn = intval($fn);
+		$fileurl = addslashes($fileurl);
+		$message = addslashes($message);
 		$str='<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction('.$fn.', \''.$fileurl.'\', \''.$message.'\');</script>';
 		exit($str);
 	}

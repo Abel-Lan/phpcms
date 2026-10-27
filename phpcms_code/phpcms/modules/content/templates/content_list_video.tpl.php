@@ -330,7 +330,7 @@ function update_param(fid, obj) {
 }
 
 function upthumb(fid) {
-	window.top.art.dialog({title:'更换缩略图',id:'update_thumb',iframe:'index.php?m=attachment&c=attachments&a=swfupload&args=<?php echo $args;?>&module=content&catid=<?php echo $catid;?>&authkey=<?php echo $authkey;?>',width:'500',height:'420'}, function(){ var d = window.top.art.dialog({id:'update_thumb'}).data.iframe;var did = d.document.getElementById('att-status');var content = $(did).html();
+	window.top.art.dialog({title:'更换缩略图',id:'update_thumb',iframe:'index.php?m=attachment&c=attachments&a=swfupload&args=<?php echo urlencode($args);?>&module=content&catid=<?php echo $catid;?>&authkey=<?php echo $authkey;?>',width:'500',height:'420'}, function(){ var d = window.top.art.dialog({id:'update_thumb'}).data.iframe;var did = d.document.getElementById('att-status');var content = $(did).html();
 	var content_arr = new Array(); content_arr = content.split('|');var value = content_arr[1];if (value){var thumb_old = $('#thumb_images_'+fid).attr('src');$.ajaxSettings.async = false;$.get('index.php', {m:'content', c:'content', a:'update_param', field:'thumb', id:fid, value:value, modelid:'<?php echo $modelid;?>', pc_hash:'<?php echo $_SESSION['pc_hash'];?>'}, function (data){
 		if (data==200){
             $('#thumb_images_'+fid).attr('src', value);

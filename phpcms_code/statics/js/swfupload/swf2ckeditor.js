@@ -1,7 +1,7 @@
 function flashupload(uploadid, name, textareaid, funcName, args, module, catid, authkey) {
-	var args = args ? '&args='+args : '';
+	var args_param = args ? '&args='+encodeURIComponent(args) : '';
 	var setting = '&module='+module+'&catid='+catid+'&authkey='+authkey;
-	window.top.art.dialog({title:name,id:uploadid,iframe:'index.php?m=attachment&c=attachments&a=swfupload'+args+setting,width:'500',height:'420'}, function(){ if(funcName) {funcName.apply(this,[uploadid,textareaid]);}else {submit_ckeditor(uploadid,textareaid);}}, function(){window.top.art.dialog({id:uploadid}).close()});
+	window.top.art.dialog({title:name,id:uploadid,iframe:'index.php?m=attachment&c=attachments&a=swfupload'+args_param+setting,width:'500',height:'420'}, function(){ if(funcName) {funcName.apply(this,[uploadid,textareaid]);}else {submit_ckeditor(uploadid,textareaid);}}, function(){window.top.art.dialog({id:uploadid}).close()});
 }
 
 function submit_ckeditor(uploadid,textareaid){
