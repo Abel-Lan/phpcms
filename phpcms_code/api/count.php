@@ -55,6 +55,10 @@ function hits($hitsid) {
 	$sql = array('views'=>$views,'yesterdayviews'=>$yesterdayviews,'dayviews'=>$dayviews,'weekviews'=>$weekviews,'monthviews'=>$monthviews,'updatetime'=>SYS_TIME);
     return $db->update($sql, array('hitsid'=>$hitsid));
 }
-
+// 设置响应头禁止缓存
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('Content-type: application/javascript');
 ?>
 $('#hits').html('<?php echo $views?>');

@@ -1,6 +1,10 @@
 <?php
 defined('IN_PHPCMS') or exit('No permission resources.');
 
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 $refererUrl = parse_url($_SERVER['HTTP_REFERER']);
 $host = $_SERVER['HTTP_HOST'];
 if(!isset($_SERVER['HTTP_REFERER']) || $refererUrl['host'] != $_SERVER['HTTP_HOST']) exit();
