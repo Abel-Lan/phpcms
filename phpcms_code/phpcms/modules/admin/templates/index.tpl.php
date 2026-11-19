@@ -282,15 +282,9 @@ function _M(menuid,targetUrl) {
 	$("#menuid").val(menuid);
 	$("#bigid").val(menuid);
 	$("#paneladd").html('<a class="panel-add" href="javascript:add_panel();"><em><?php echo L('add')?></em></a>');
-	if(menuid!=8) {
-		$("#leftMain").load("?m=admin&c=index&a=public_menu_left&menuid="+menuid, {limit: 25}, function(){
-		   windowW();
-		 });
-	} else {
-		$("#leftMain").load("?m=admin&c=phpsso&a=public_menu_left&menuid="+menuid, {limit: 25}, function(){
-		   windowW();
-		 });
-	}
+	$("#leftMain").load("?m=admin&c=index&a=public_menu_left&menuid="+menuid, {limit: 25}, function(){
+	   windowW();
+	 });
 	//$("#rightMain").attr('src', targetUrl);
 	$('.top_menu').removeClass("on");
 	$('#_M'+menuid).addClass("on");

@@ -160,7 +160,6 @@ $LANG['setting_yes'] = '是';
 $LANG['setting_no'] = '否';
 $LANG['setting_basic_cfg'] = '基本配置';
 $LANG['setting_safe_cfg'] = '安全配置';
-$LANG['setting_sso_cfg'] = 'PHPSSO';
 $LANG['setting_mail_cfg'] = '邮箱配置';
 $LANG['setting_admin_email'] = '管理员邮箱';
 $LANG['setting_gzip'] = '启用页面Gzip压缩';
@@ -179,14 +178,7 @@ $LANG['setting_adminaccessip'] = '允许访问后台的IP列表';
 $LANG['setting_maxloginfailedtimes'] = '后台最大登录失败次数';
 $LANG['setting_maxiplockedtime'] = 'IP锁定时间';
 $LANG['setting_minrefreshtime'] = '连续两次刷新最短间隔';
-$LANG['setting_phpsso'] = '启用PHPSSO';
-$LANG['update_phpsso_cache'] = '更新缓存';
-$LANG['setting_phpsso_appid'] = '应用ID';
-$LANG['setting_phpsso_phpsso_api_url'] = '接口地址';
-$LANG['setting_phpsso_auth_key'] = '加密密钥';
-$LANG['setting_phpsso_version'] = '版本号';
 $LANG['must_be_number'] = '必须为数字';
-$LANG['must_be_32_w'] = '为phpsso中该设置的密钥';
 $LANG['setting_category_ajax'] = '异步显示栏目层级';
 
 $LANG['setting_succ'] = '配置修改成功';
@@ -216,7 +208,6 @@ $LANG['setting_input_error'] = '输入有误';
 $LANG['setting_errorlog_hint'] = '错误记录文件超过此尺寸时，后台首页将会预警提示';
 $LANG['setting_errorlog_size'] = '请输入文件尺寸';
 $LANG['setting_errorlog_type'] = '文件尺寸为整数或小数';
-$LANG['setting_phpsso_type'] = '请填写接口地址，格式为：http://www.phpsso.cn,结尾不包含“/”';
 $LANG['setting_errorlog_hint'] = '请输入文件尺寸';
 //admin_manage.php
 

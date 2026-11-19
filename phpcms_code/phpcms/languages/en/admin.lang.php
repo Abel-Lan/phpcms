@@ -160,7 +160,6 @@ $LANG['setting_yes'] = 'Yes';
 $LANG['setting_no'] = 'No';
 $LANG['setting_basic_cfg'] = 'Basic settings';
 $LANG['setting_safe_cfg'] = 'Security settings';
-$LANG['setting_sso_cfg'] = 'PHPSSO';
 $LANG['setting_mail_cfg'] = 'Mail settings';
 $LANG['setting_admin_email'] = 'Administrator mailbox';
 $LANG['setting_gzip'] = 'Enable gzip compression';
@@ -178,14 +177,7 @@ $LANG['setting_adminaccessip'] = 'IP list for allow to access backend';
 $LANG['setting_maxloginfailedtimes'] = 'Backend - max number of failed login attempts';
 $LANG['setting_maxiplockedtime'] = 'IP locked time';
 $LANG['setting_minrefreshtime'] = 'Shortest interval between data refreshes';
-$LANG['setting_phpsso'] = 'Enable PHPSSO';
-$LANG['update_phpsso_cache'] = 'Update cache';
-$LANG['setting_phpsso_appid'] = 'App ID';
-$LANG['setting_phpsso_phpsso_api_url'] = 'Interface address';
-$LANG['setting_phpsso_auth_key'] = 'Encryption key';
-$LANG['setting_phpsso_version'] = 'Version';
 $LANG['must_be_number'] = 'must be digits';
-$LANG['must_be_32_w'] = 'encryption key for PHPSSO';
 
 
 $LANG['setting_succ'] = 'Updated successfully';
@@ -215,7 +207,6 @@ $LANG['setting_input_error'] = 'Invalid input';
 $LANG['setting_errorlog_hint'] = 'Backend homepage will show a error message if error log file exceeds size limit';
 $LANG['setting_errorlog_size'] = 'Please input error log file size';
 $LANG['setting_errorlog_type'] = 'It can be positive number or decimal';
-$LANG['setting_phpsso_type'] = 'Please input interface address. Format is [http://www.phpsso.cn] without “/”.';
 $LANG['setting_errorlog_hint'] = 'Please input error log file size';
 //admin_manage.php
 

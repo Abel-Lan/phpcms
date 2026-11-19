@@ -3,7 +3,7 @@ defined('IN_ADMIN') or exit('No permission resources.');
 include $this->admin_tpl('header');
 ?>
 <div class="pad-10">
-<?php $n=1; foreach ($menu as $key=>$v):if ($v['name']=='phpsso') continue;if($n==1) {echo '<div class="map-menu lf">';}?>
+<?php $n=1; foreach ($menu as $key=>$v):if($n==1) {echo '<div class="map-menu lf">';}?>
 <ul>
 <li class="title"><?php echo L($v['name'])?></li>
 <?php foreach ($v['childmenus'] as $k=>$r):?>

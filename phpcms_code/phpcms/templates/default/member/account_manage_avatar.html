@@ -6,7 +6,7 @@
 			<h5 class="title">{L('modify').L('avatar')}</h5>
 			<div class="content">
 				
-				<script language="javascript" type="text/javascript" src="{$phpsso_api_url}/statics/js/swfobject.js"></script>
+				<script language="javascript" type="text/javascript" src="{JS_PATH}swfobject.js"></script>
 				<script type="text/javascript">
 					var flashvars = {
 						'upurl':"{$upurl}&callback=return_avatar&"
@@ -26,7 +26,7 @@
 					var attributes = {
 						
 					}; 
-					swfobject.embedSWF("{$phpsso_api_url}/statics/images/main.swf", "myContent", "490", "434", "9.0.0","{$phpsso_api_url}/statics/images/expressInstall.swf", flashvars, params, attributes);
+					swfobject.embedSWF("{IMG_PATH}main.swf", "myContent", "490", "434", "9.0.0","{IMG_PATH}expressInstall.swf", flashvars, params, attributes);
 
 					function return_avatar(data) {
 						if(data == 1) {
@@ -39,7 +39,7 @@
 				<ul class="col-right col-avatar" id="avatarlist">
 				  {loop $avatar $k $v}
 					<li>
-						<img src="{$v}" height="{$k}" width="{$k}" onerror="this.src='{$phpsso_api_url}/statics/images/member/nophoto.gif'"><br />
+						<img src="{$v}" height="{$k}" width="{$k}" onerror="this.src='{IMG_PATH}member/nophoto.gif'"><br />
 						{L('avatar')}{$k} x {$k}
 					</li>
 				  {/loop}

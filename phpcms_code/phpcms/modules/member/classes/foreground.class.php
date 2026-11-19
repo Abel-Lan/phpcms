@@ -63,7 +63,6 @@ class foreground {
 						//设置当前登录待验证账号COOKIE，为重发邮件所用
 						param::set_cookie('_regusername', $this->memberinfo['username']);
 						param::set_cookie('_reguserid', $this->memberinfo['userid']);
-						param::set_cookie('_reguseruid', $this->memberinfo['phpssouid']);
 						
 						param::set_cookie('email', $this->memberinfo['email']);
 						showmessage(L('need_emial_authentication', '', 'member'), 'index.php?m=member&c=index&a=register&t=2');

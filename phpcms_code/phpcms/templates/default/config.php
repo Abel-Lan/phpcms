@@ -145,10 +145,6 @@
       'protocol.html' => '注册协议',
       'register.html' => '注册页面',
     ),
-    'templates|default|phpsso' => 
-    array (
-      'index.html' => '首页',
-    ),
     'templates|default|search' => 
     array (
       'footer.html' => '页尾',

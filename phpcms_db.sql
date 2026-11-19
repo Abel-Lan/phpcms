@@ -4225,7 +4225,6 @@ INSERT INTO `v9_log` VALUES ('20', '', '0', 'admin', '', 'index', '?m=admin&c=in
 DROP TABLE IF EXISTS `v9_member`;
 CREATE TABLE `v9_member` (
   `userid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `phpssouid` mediumint(8) unsigned NOT NULL,
   `username` char(20) NOT NULL DEFAULT '',
   `password` char(32) NOT NULL DEFAULT '',
   `encrypt` char(6) NOT NULL,
@@ -4251,8 +4250,7 @@ CREATE TABLE `v9_member` (
   `mobile` char(11) NOT NULL DEFAULT '',
   PRIMARY KEY (`userid`),
   UNIQUE KEY `username` (`username`),
-  KEY `email` (`email`(20)),
-  KEY `phpssouid` (`phpssouid`)
+  KEY `email` (`email`(20))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -4582,8 +4580,7 @@ INSERT INTO `v9_menu` VALUES ('974', 'add_keylink', '973', 'admin', 'keylink', '
 INSERT INTO `v9_menu` VALUES ('975', 'content_settings', '4', 'content', 'content_settings', 'init', '', '0', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('7', 'extend', '0', 'admin', 'extend', 'init_extend', '', '7', '1', '0', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('977', 'extend_all', '7', 'admin', 'extend_all', 'init', '', '0', '1', '1', '1', '1', '1', '1');
-INSERT INTO `v9_menu` VALUES ('980', 'sso_config', '30', 'admin', 'setting', 'init', '&tab=3', '12', '1', '1', '1', '1', '1', '1');
-INSERT INTO `v9_menu` VALUES ('981', 'email_config', '30', 'admin', 'setting', 'init', '&tab=4', '13', '1', '1', '1', '1', '1', '1');
+INSERT INTO `v9_menu` VALUES ('981', 'email_config', '30', 'admin', 'setting', 'init', '&tab=3', '13', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('982', 'module_manage', '82', 'admin', 'module', 'init', '', '0', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('983', 'ipbanned', '977', 'admin', 'ipbanned', 'init', '', '0', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('984', 'add_ipbanned', '983', 'admin', 'ipbanned', 'add', '', '0', '0', '1', '1', '1', '1', '1');
@@ -4606,7 +4603,6 @@ INSERT INTO `v9_menu` VALUES ('1005', 'scan', '977', 'scan', 'index', 'init', ''
 INSERT INTO `v9_menu` VALUES ('1006', 'scan_report', '1005', 'scan', 'index', 'scan_report', '', '0', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1007', 'md5_creat', '1005', 'scan', 'index', 'md5_creat', '', '0', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1008', 'album_import', '868', 'special', 'album', 'import', '', '0', '1', '1', '1', '1', '1', '1');
-INSERT INTO `v9_menu` VALUES ('8', 'phpsso', '0', 'admin', 'phpsso', 'menu', '', '7', '1', '0', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1011', 'edit_content', '822', 'content', 'content', 'edit', '', '0', '0', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1012', 'push_to_special', '822', 'content', 'push', 'init', '', '0', '0', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1023', 'delete_log', '997', 'admin', 'log', 'delete', '', '0', '0', '1', '1', '1', '1', '1');
@@ -4652,7 +4648,7 @@ INSERT INTO `v9_menu` VALUES ('1073', 'delete_menu', '31', 'admin', 'menu', 'del
 INSERT INTO `v9_menu` VALUES ('1074', 'edit_workflow', '885', 'content', 'workflow', 'edit', '', '0', '0', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1075', 'delete_workflow', '885', 'content', 'workflow', 'delete', '', '0', '0', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1076', 'creat_html', '868', 'special', 'special', 'html', '', '0', '1', '1', '1', '1', '1', '1');
-INSERT INTO `v9_menu` VALUES ('1093', 'connect_config', '30', 'admin', 'setting', 'init', '&tab=5', '14', '1', '1', '1', '1', '1', '1');
+INSERT INTO `v9_menu` VALUES ('1093', 'connect_config', '30', 'admin', 'setting', 'init', '&tab=4', '14', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1102', 'view_modelinfo', '74', 'member', 'member_verify', 'modelinfo', '', '0', '0', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1202', 'create_special_list', '868', 'special', 'special', 'create_special_list', '', '0', '1', '1', '1', '1', '1', '1');
 INSERT INTO `v9_menu` VALUES ('1240', 'view_memberlinfo', '72', 'member', 'member', 'memberinfo', '', '0', '0', '1', '1', '1', '1', '1');
@@ -5742,141 +5738,6 @@ CREATE TABLE `v9_sphinx_counter` (
 -- ----------------------------
 -- Records of v9_sphinx_counter
 -- ----------------------------
-
--- ----------------------------
--- Table structure for v9_sso_admin
--- ----------------------------
-DROP TABLE IF EXISTS `v9_sso_admin`;
-CREATE TABLE `v9_sso_admin` (
-  `id` smallint(6) NOT NULL AUTO_INCREMENT,
-  `username` char(20) NOT NULL,
-  `password` char(32) NOT NULL,
-  `encrypt` char(6) DEFAULT NULL,
-  `issuper` tinyint(1) DEFAULT '0',
-  `lastlogin` int(10) DEFAULT NULL,
-  `ip` char(15) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of v9_sso_admin
--- ----------------------------
-INSERT INTO `v9_sso_admin` VALUES ('1', 'admin', '7c9e4bf8c3565ea76343c589ec8e251e', 'u5bHLn', '1', '0', '');
-
--- ----------------------------
--- Table structure for v9_sso_applications
--- ----------------------------
-DROP TABLE IF EXISTS `v9_sso_applications`;
-CREATE TABLE `v9_sso_applications` (
-  `appid` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
-  `type` char(16) NOT NULL DEFAULT '',
-  `name` char(20) NOT NULL DEFAULT '',
-  `url` char(255) NOT NULL DEFAULT '',
-  `authkey` char(255) NOT NULL DEFAULT '',
-  `ip` char(15) NOT NULL DEFAULT '',
-  `apifilename` char(30) NOT NULL DEFAULT 'phpsso.php',
-  `charset` char(8) NOT NULL DEFAULT '',
-  `synlogin` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`appid`),
-  KEY `synlogin` (`synlogin`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of v9_sso_applications
--- ----------------------------
-INSERT INTO `v9_sso_applications` VALUES ('1', 'phpcms_v9', 'phpcms v9', 'http://phpcms.com/', 'ubdgbFRobEWL9D1pcR4UG2U5QDgckWzp', '', 'api.php?op=phpsso', 'utf-8', '1');
-
--- ----------------------------
--- Table structure for v9_sso_members
--- ----------------------------
-DROP TABLE IF EXISTS `v9_sso_members`;
-CREATE TABLE `v9_sso_members` (
-  `uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` char(20) NOT NULL DEFAULT '',
-  `password` char(32) NOT NULL DEFAULT '',
-  `random` char(8) NOT NULL DEFAULT '',
-  `email` char(32) NOT NULL DEFAULT '',
-  `regip` char(15) NOT NULL DEFAULT '',
-  `regdate` int(10) unsigned NOT NULL DEFAULT '0',
-  `lastip` char(15) NOT NULL DEFAULT '0',
-  `lastdate` int(10) unsigned NOT NULL DEFAULT '0',
-  `appname` char(15) NOT NULL,
-  `type` enum('app','connect') DEFAULT NULL,
-  `avatar` tinyint(1) NOT NULL DEFAULT '0',
-  `ucuserid` mediumint(8) unsigned DEFAULT '0',
-  PRIMARY KEY (`uid`),
-  UNIQUE KEY `username` (`username`),
-  KEY `email` (`email`),
-  KEY `ucuserid` (`ucuserid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of v9_sso_members
--- ----------------------------
-
--- ----------------------------
--- Table structure for v9_sso_messagequeue
--- ----------------------------
-DROP TABLE IF EXISTS `v9_sso_messagequeue`;
-CREATE TABLE `v9_sso_messagequeue` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `operation` char(32) NOT NULL,
-  `succeed` tinyint(1) NOT NULL DEFAULT '0',
-  `totalnum` smallint(6) unsigned NOT NULL DEFAULT '0',
-  `noticedata` mediumtext NOT NULL,
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0',
-  `appstatus` mediumtext,
-  PRIMARY KEY (`id`),
-  KEY `dateline` (`dateline`),
-  KEY `succeed` (`succeed`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of v9_sso_messagequeue
--- ----------------------------
-
--- ----------------------------
--- Table structure for v9_sso_session
--- ----------------------------
-DROP TABLE IF EXISTS `v9_sso_session`;
-CREATE TABLE `v9_sso_session` (
-  `sessionid` char(32) NOT NULL,
-  `userid` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `ip` char(15) NOT NULL,
-  `lastvisit` int(10) unsigned NOT NULL DEFAULT '0',
-  `roleid` tinyint(3) unsigned DEFAULT '0',
-  `groupid` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `m` char(20) NOT NULL,
-  `c` char(20) NOT NULL,
-  `a` char(20) NOT NULL,
-  `data` char(255) NOT NULL,
-  PRIMARY KEY (`sessionid`),
-  KEY `lastvisit` (`lastvisit`)
-) ENGINE=MEMORY DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of v9_sso_session
--- ----------------------------
-
--- ----------------------------
--- Table structure for v9_sso_settings
--- ----------------------------
-DROP TABLE IF EXISTS `v9_sso_settings`;
-CREATE TABLE `v9_sso_settings` (
-  `name` varchar(32) NOT NULL DEFAULT '',
-  `data` text NOT NULL,
-  PRIMARY KEY (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of v9_sso_settings
--- ----------------------------
-INSERT INTO `v9_sso_settings` VALUES ('denyemail', '');
-INSERT INTO `v9_sso_settings` VALUES ('denyusername', '');
-INSERT INTO `v9_sso_settings` VALUES ('creditrate', '');
-INSERT INTO `v9_sso_settings` VALUES ('sp4', '');
-INSERT INTO `v9_sso_settings` VALUES ('ucenter', '');
 
 -- ----------------------------
 -- Table structure for v9_tag

@@ -8,7 +8,7 @@ $web_tables = array();
 $web_tables_info = array();
 $pre = $database[$pdo_name]['tablepre'];
 //排除系统关键信息数据表
-$sys_tables = array($pre.'admin', $pre.'admin_panel', $pre.'admin_role', $pre.'admin_role_priv', $pre.'block', $pre.'block_history', $pre.'cache', $pre.'dbsource', $pre.'log', $pre.'urlrule', $pre.'session', $pre.'sso_admin', $pre.'sso_applications', $pre.'sso_members', $pre.'sso_messagequeue', $pre.'sso_session', $pre.'sso_settings', $pre.'site', $pre.'queue', $pre.'release_point');
+$sys_tables = array($pre.'admin', $pre.'admin_panel', $pre.'admin_role', $pre.'admin_role_priv', $pre.'block', $pre.'block_history', $pre.'cache', $pre.'dbsource', $pre.'log', $pre.'urlrule', $pre.'session', $pre.'site', $pre.'queue', $pre.'release_point');
 while(($rs = $db->fetch_next()) != false) {
 	if(strpos($rs['Name'], $pre) === 0 && !in_array($rs['Name'], $sys_tables) && !preg_match('/'.$pre.'poster_(\d){6}/i',$rs['Name'])) {
 		$web_tables[] = $rs['Name'];

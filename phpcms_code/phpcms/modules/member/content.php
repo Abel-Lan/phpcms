@@ -642,19 +642,6 @@ class content extends foreground {
 			$amount = $amount * $toptime;
 			echo $amount;
 		}
-	}		
-	/**
-	 * 初始化phpsso
-	 * about phpsso, include client and client configure
-	 * @return string phpsso_api_url phpsso地址
-	 */
-	private function _init_phpsso() {
-		pc_base::load_app_class('client', '', 0);
-		define('APPID', pc_base::load_config('system', 'phpsso_appid'));
-		$phpsso_api_url = pc_base::load_config('system', 'phpsso_api_url');
-		$phpsso_auth_key = pc_base::load_config('system', 'phpsso_auth_key');
-		$this->client = new client($phpsso_api_url, $phpsso_auth_key);
-		return $phpsso_api_url;
 	}
 	
 	/**

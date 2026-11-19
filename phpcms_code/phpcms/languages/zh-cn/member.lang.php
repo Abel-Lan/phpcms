@@ -10,7 +10,6 @@ $LANG['operation'] = '操作';
 $LANG['password'] = '密码';
 $LANG['cofirmpwd'] = '确认密码';
 $LANG['realname'] = '真实姓名';
-$LANG['enable_phpsso'] = '需开启PHPSSO';
 $LANG['enable_register'] = '注册功能';
 $LANG['nameerror'] = '用户名不能为空。';
 $LANG['between_2_to_20'] = '应该为2-20位之间';

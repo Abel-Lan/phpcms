@@ -14,7 +14,6 @@ class member_verify extends admin {
 	function __construct() {
 		parent::__construct();
 		$this->db = pc_base::load_model('member_verify_model');
-		$this->_init_phpsso();
 	}
 
 	/**
@@ -74,40 +73,36 @@ class member_verify extends admin {
 			$success_uids = $info = array();
 			
 			foreach($userarr as $v) {
-				$status = $this->client->ps_member_register($v['username'], $v['password'], $v['email'], $v['regip'], $v['encrypt']);
-				if ($status > 0) {
-					$info['phpssouid'] = $status;
-					$info['password'] = password($v['password'], $v['encrypt']);
-					$info['regdate'] = $info['lastdate'] = $v['regdate'];
-					$info['username'] = $v['username'];
-					$info['nickname'] = $v['nickname'];
-					$info['email'] = $v['email'];
-					$info['regip'] = $v['regip'];
-					$info['point'] = $v['point'];
-					$info['groupid'] = $this->_get_usergroup_bypoint($v['point']);
-					$info['amount'] = $v['amount'];
-					$info['encrypt'] = $v['encrypt'];
-					$info['modelid'] = $v['modelid'] ? $v['modelid'] : 10;
-					if($v['mobile']) $info['mobile'] = $v['mobile'];
-					$userid = $this->member_db->insert($info, 1);
+				$info['password'] = password($v['password'], $v['encrypt']);
+				$info['regdate'] = $info['lastdate'] = $v['regdate'];
+				$info['username'] = $v['username'];
+				$info['nickname'] = $v['nickname'];
+				$info['email'] = $v['email'];
+				$info['regip'] = $v['regip'];
+				$info['point'] = $v['point'];
+				$info['groupid'] = $this->_get_usergroup_bypoint($v['point']);
+				$info['amount'] = $v['amount'];
+				$info['encrypt'] = $v['encrypt'];
+				$info['modelid'] = $v['modelid'] ? $v['modelid'] : 10;
+				if($v['mobile']) $info['mobile'] = $v['mobile'];
+				$userid = $this->member_db->insert($info, 1);
 
-					if($v['modelinfo']) {	//如果数据模型不为空
-						//插入会员模型数据
-						$user_model_info = string2array($v['modelinfo']);
-						$user_model_info['userid'] = $userid;
-						$this->member_db->set_model($info['modelid']);
-						$this->member_db->insert($user_model_info);
-					}
-					
-					if($userid) {
-						$success_uids[] = $v['userid'];
-					}
+				if($v['modelinfo']) {	//如果数据模型不为空
+					//插入会员模型数据
+					$user_model_info = string2array($v['modelinfo']);
+					$user_model_info['userid'] = $userid;
+					$this->member_db->set_model($info['modelid']);
+					$this->member_db->insert($user_model_info);
+				}
+				
+				if($userid) {
+					$success_uids[] = $v['userid'];
 				}
 			}
 			$where = to_sqls($success_uids, '', 'userid');			
 			$this->db->update(array('status'=>1, 'message'=>$_POST['message']), $where);
 			
-			//phpsso注册失败的用户状态直接置为审核期间phpsso已注册该会员
+			//审核失败的用户状态置为审核失败
 			$fail_uids = array_diff($uidarr, $success_uids);
 			if (!empty($fail_uids)) {
 				$where = to_sqls($fail_uids, '', 'userid');
@@ -270,37 +265,22 @@ class member_verify extends admin {
 	}
 	
 	/**
-	 * 初始化phpsso
-	 * about phpsso, include client and client configure
-	 * @return string phpsso_api_url phpsso地址
-	 */
-	private function _init_phpsso() {
-		pc_base::load_app_class('client', '', 0);
-		define('APPID', pc_base::load_config('system', 'phpsso_appid'));
-		$phpsso_api_url = pc_base::load_config('system', 'phpsso_api_url');
-		$phpsso_auth_key = pc_base::load_config('system', 'phpsso_auth_key');
-		$this->client = new client($phpsso_api_url, $phpsso_auth_key);
-		return $phpsso_api_url;
-	}
-	
-	/**
 	 * check uername status
 	 */
 	public function checkname_ajax() {
 		$username = isset($_GET['username']) && trim($_GET['username']) ? trim($_GET['username']) : exit(0);
 		$username = iconv('utf-8', CHARSET, $username);
 		
-		$status = $this->client->ps_checkname($username);
-		if($status == -4) {	//deny_register
+		$exists = $this->db->get_one(array('username'=>$username));
+		if($exists) {
 			exit('0');
 		}
-		
-		$status = $this->client->ps_get_member_info($username, 2);
-		if (is_array($status)) {
+		$this->member_db = pc_base::load_model('member_model');
+		$exists2 = $this->member_db->get_one(array('username'=>$username));
+		if($exists2) {
 			exit('0');
-		} else {
-			exit('1');
 		}
+		exit('1');
 	}
 	
 	/**
@@ -309,23 +289,15 @@ class member_verify extends admin {
 	public function checkemail_ajax() {
 		$email = isset($_GET['email']) && trim($_GET['email']) ? trim($_GET['email']) : exit(0);
 		
-		$status = $this->client->ps_checkemail($email);
-		if($status == -5) {	//deny_register
-			exit('0');
-		}
-				
-		$status = $this->client->ps_get_member_info($email, 3);
-		if(isset($_GET['phpssouid']) && isset($status['uid'])) {
-			if ($status['uid'] == intval($_GET['phpssouid'])) {
+		$this->member_db = pc_base::load_model('member_model');
+		$exists = $this->member_db->get_one(array('email'=>$email));
+		if($exists) {
+			if(isset($_GET['userid']) && $exists['userid'] == intval($_GET['userid'])) {
 				exit('1');
 			}
-		}
-
-		if (is_array($status)) {
 			exit('0');
-		} else {
-			exit('1');
 		}
+		exit('1');
 	}
 }
 ?>

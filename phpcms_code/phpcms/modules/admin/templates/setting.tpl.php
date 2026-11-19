@@ -4,7 +4,7 @@ include $this->admin_tpl('header');?>
 <script type="text/javascript">
 <!--
 	$(function(){
-		SwapTab('setting','on','',6,<?php echo $_GET['tab'] ? $_GET['tab'] : '1'?>);
+		SwapTab('setting','on','',5,<?php echo $_GET['tab'] ? $_GET['tab'] : '1'?>);
 		$.formValidator.initConfig({formid:"myform",autotip:true,onerror:function(msg,obj){window.top.art.dialog({content:msg,lock:true,width:'200',height:'50'}, function(){this.close();$(obj).focus();})}});		
 		$("#js_path").formValidator({onshow:"<?php echo L('setting_input').L('setting_js_path')?>",onfocus:"<?php echo L('setting_js_path').L('setting_end_with_x')?>"}).inputValidator({onerror:"<?php echo L('setting_js_path').L('setting_input_error')?>"}).regexValidator({regexp:"(.+)\/$",onerror:"<?php echo L('setting_js_path').L('setting_end_with_x')?>"});
 		$("#css_path").formValidator({onshow:"<?php echo L('setting_input').L('setting_css_path')?>",onfocus:"<?php echo L('setting_css_path').L('setting_end_with_x')?>"}).inputValidator({onerror:"<?php echo L('setting_css_path').L('setting_input_error')?>"}).regexValidator({regexp:"(.+)\/$",onerror:"<?php echo L('setting_css_path').L('setting_end_with_x')?>"});
@@ -13,13 +13,7 @@ include $this->admin_tpl('header');?>
 			
 		$("#upload_url").formValidator({onshow:"<?php echo L('setting_input').L('setting_upload_url')?>",onfocus:"<?php echo L('setting_upload_url').L('setting_end_with_x')?>"}).inputValidator({onerror:"<?php echo L('setting_upload_url').L('setting_input_error')?>"}).regexValidator({regexp:"(.+)\/$",onerror:"<?php echo L('setting_upload_url').L('setting_end_with_x')?>"});
 		
-		$("#errorlog_size").formValidator({onshow:"<?php echo L('setting_errorlog_hint')?>",onfocus:"<?php echo L('setting_input').L('setting_error_log_size')?>"}).inputValidator({onerror:"<?php echo L('setting_error_log_size').L('setting_input_error')?>"}).regexValidator({regexp:"num",datatype:"enum",onerror:"<?php echo L('setting_errorlog_type')?>"});	
-			
-		$("#phpsso_api_url").formValidator({onshow:"<?php echo L('setting_phpsso_type')?>",onfocus:"<?php echo L('setting_phpsso_type')?>",tipcss:{width:'300px'},empty:false}).inputValidator({onerror:"<?php echo L('setting_phpsso_type')?>"}).regexValidator({regexp:"http(s?):\/\/(.+)[^/]$",onerror:"<?php echo L('setting_phpsso_type')?>"});
-		
-		$("#phpsso_appid").formValidator({onshow:"<?php echo L('input').L('setting_phpsso_appid')?>",onfocus:"<?php echo L('input').L('setting_phpsso_appid')?>"}).regexValidator({regexp:"^\\d{1,8}$",onerror:"<?php echo L('setting_phpsso_appid').L('must_be_number')?>"});
-		$("#phpsso_version").formValidator({onshow:"<?php echo L('input').L('setting_phpsso_version')?>",onfocus:"<?php echo L('input').L('setting_phpsso_version')?>"}).regexValidator({regexp:"^\\d{1,8}$",onerror:"<?php echo L('setting_phpsso_version').L('must_be_number')?>"});
-		$("#phpsso_auth_key").formValidator({onshow:"<?php echo L('input').L('setting_phpsso_auth_key')?>",onfocus:"<?php echo L('input').L('setting_phpsso_auth_key')?>"}).regexValidator({regexp:"^\\w{32}$",onerror:"<?php echo L('setting_phpsso_auth_key').L('must_be_32_w')?>"});
+		$("#errorlog_size").formValidator({onshow:"<?php echo L('setting_errorlog_hint')?>",onfocus:"<?php echo L('setting_input').L('setting_error_log_size')?>"}).inputValidator({onerror:"<?php echo L('setting_error_log_size').L('setting_input_error')?>"}).regexValidator({regexp:"num",datatype:"enum",onerror:"<?php echo L('setting_errorlog_type')?>"});
 	})
 //-->
 </script>
@@ -27,12 +21,11 @@ include $this->admin_tpl('header');?>
 <div class="pad-10">
 <div class="col-tab">
 <ul class="tabBut cu-li">
-            <li id="tab_setting_1" class="on" onclick="SwapTab('setting','on','',6,1);"><?php echo L('setting_basic_cfg')?></li>
-            <li id="tab_setting_2" onclick="SwapTab('setting','on','',6,2);"><?php echo L('setting_safe_cfg')?></li>
-            <li id="tab_setting_3" onclick="SwapTab('setting','on','',6,3);"><?php echo L('setting_sso_cfg')?></li>
-            <li id="tab_setting_4" onclick="SwapTab('setting','on','',6,4);"><?php echo L('setting_mail_cfg')?></li>
-			<li id="tab_setting_5" onclick="SwapTab('setting','on','',6,5);"><?php echo L('setting_connect')?></li>
-			<li id="tab_setting_6" onclick="SwapTab('setting','on','',6,6);">CDN刷新配置</li>
+            <li id="tab_setting_1" class="on" onclick="SwapTab('setting','on','',5,1);"><?php echo L('setting_basic_cfg')?></li>
+            <li id="tab_setting_2" onclick="SwapTab('setting','on','',5,2);"><?php echo L('setting_safe_cfg')?></li>
+            <li id="tab_setting_3" onclick="SwapTab('setting','on','',5,3);"><?php echo L('setting_mail_cfg')?></li>
+			<li id="tab_setting_4" onclick="SwapTab('setting','on','',5,4);"><?php echo L('setting_connect')?></li>
+			<li id="tab_setting_5" onclick="SwapTab('setting','on','',5,5);">CDN刷新配置</li>
 </ul>
 <div id="div_setting_1" class="contentList pad-10">
 <table width="100%"  class="table_form">
@@ -118,32 +111,6 @@ include $this->admin_tpl('header');?>
 <div id="div_setting_3" class="contentList pad-10 hidden">
 <table width="100%"  class="table_form">
   <tr>
-    <th width="120"><?php echo L('setting_phpsso')?></th>
-    <td class="y-bg">
-    <input name="setconfig[phpsso]" value="1" type="radio"  <?php echo ($phpsso=='1') ? ' checked' : ''?>> <?php echo L('setting_yes')?>&nbsp;&nbsp;&nbsp;&nbsp;
-	 <input name="setconfig[phpsso]" value="0" type="radio"  <?php echo ($phpsso=='0') ? ' checked' : ''?>> <?php echo L('setting_no')?></td>
-  </tr> 
-  <tr>
-    <th><?php echo L('setting_phpsso_appid')?></th>
-    <td class="y-bg"><input type="text" class="input-text" name="setconfig[phpsso_appid]" id="phpsso_appid" size="30" value="<?php echo $phpsso_appid ?>"/></td>
-  </tr> 
-  <tr>
-    <th><?php echo L('setting_phpsso_phpsso_api_url')?></th>
-    <td class="y-bg"><input type="text" class="input-text" name="setconfig[phpsso_api_url]" id="phpsso_api_url" size="50" value="<?php echo $phpsso_api_url ?>"/></td>
-  </tr>  
-   <tr>
-    <th><?php echo L('setting_phpsso_auth_key')?></th>
-    <td class="y-bg"><input type="text" class="input-text" name="setconfig[phpsso_auth_key]" id="phpsso_auth_key" size="50" value="<?php echo $phpsso_auth_key ?>"/></td>
-  </tr>
-   <tr>
-    <th><?php echo L('setting_phpsso_version')?></th>
-    <td class="y-bg"><input type="text" class="input-text" name="setconfig[phpsso_version]" id="phpsso_version" size="2" value="<?php echo $phpsso_version ?>"/></td>
-  </tr>      
-  </table>
-</div>
-<div id="div_setting_4" class="contentList pad-10 hidden">
-<table width="100%"  class="table_form">
-  <tr>
     <th width="120"><?php echo L('mail_type')?></th>
     <td class="y-bg">
      <input name="setting[mail_type]" checkbox="mail_type" value="1" onclick="showsmtp(this)" type="radio" <?php echo $mail_type==1 ? ' checked' : ''?>> <?php echo L('mail_type_smtp')?>
@@ -187,7 +154,7 @@ include $this->admin_tpl('header');?>
   </table>
 </div>
 
-<div id="div_setting_5" class="contentList pad-10 hidden">
+<div id="div_setting_4" class="contentList pad-10 hidden">
 <table width="100%"  class="table_form">
 
 
@@ -227,7 +194,7 @@ include $this->admin_tpl('header');?>
   </table>
 </div>
 
-<div id="div_setting_6" class="contentList pad-10 hidden">
+<div id="div_setting_5" class="contentList pad-10 hidden">
 <table width="100%"  class="table_form">
   <tr>
     <th width="120">启用CDN刷新</th>

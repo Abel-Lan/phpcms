@@ -39,7 +39,7 @@
 		if(!is_writable($configfile)) showmessage('Please chmod '.$configfile.' to 0777 !');
 		$pattern = $replacement = array();
 		foreach($config as $k=>$v) {
-			if(in_array($k,array('js_path','css_path','img_path','attachment_stat','admin_log','gzip','errorlog','phpsso','phpsso_appid','phpsso_api_url','phpsso_auth_key','phpsso_version','connect_enable', 'upload_url','sina_akey', 'sina_skey', 'snda_enable', 'snda_status', 'snda_akey', 'snda_skey', 'qq_akey', 'qq_skey','qq_appid','qq_appkey','qq_callback','admin_url'))) {
+			if(in_array($k,array('js_path','css_path','img_path','attachment_stat','admin_log','gzip','errorlog','connect_enable', 'upload_url','sina_akey', 'sina_skey', 'snda_enable', 'snda_status', 'snda_akey', 'snda_skey', 'qq_akey', 'qq_skey','qq_appid','qq_appkey','qq_callback','admin_url'))) {
 				$v = trim($v);
 				$configs[$k] = $v;
 				$pattern[$k] = "/'".$k."'\s*=>\s*([']?)[^']*([']?)(\s*),/is";

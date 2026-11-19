@@ -12,7 +12,7 @@
 	$("#email").formValidator({onshow:"<?php echo L('input').L('email')?>",onfocus:"<?php echo L('email').L('format_incorrect')?>",oncorrect:"<?php echo L('email').L('format_right')?>"}).regexValidator({regexp:"email",datatype:"enum",onerror:"<?php echo L('email').L('format_incorrect')?>"}).ajaxValidator({
 	    type : "get",
 		url : "",
-		data :"m=member&c=member&a=public_checkemail_ajax&phpssouid=<?php echo $memberinfo['phpssouid']?>",
+		data :"m=member&c=member&a=public_checkemail_ajax&userid=<?php echo $memberinfo['userid']?>",
 		datatype : "html",
 		async:'false',
 		success : function(data){	

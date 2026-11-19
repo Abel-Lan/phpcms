@@ -10,7 +10,6 @@ $LANG['operation'] = 'Operation';
 $LANG['password'] = 'Password ';
 $LANG['cofirmpwd'] = 'Re-type Password';
 $LANG['realname'] = 'Real name';
-$LANG['enable_phpsso'] = 'Enable PHPSSO';
 $LANG['enable_register'] = 'Registration';
 $LANG['nameerror'] = 'Username is required';
 $LANG['between_2_to_20'] = 'Between 2-20';

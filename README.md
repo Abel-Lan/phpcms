@@ -45,6 +45,20 @@
 
 ## 发布版本
 
+### 版本：v9.8.0 (更新时间：2026-11-19)
+
+    1. 彻底移除 phpsso 模块（独立应用目录、API 入口、后台模块、模型文件、客户端类）
+    2. member 模块远程接口调用替换为本地数据库查询（AJAX 校验、注册/登录逻辑）
+    3. 禁用纯 phpsso 依赖功能（头像上传、积分兑换），改为提示未启用
+    4. 后台 setting.tpl.php 删除 phpsso 配置标签页，SwapTab 参数从 6 改为 5，
+       email_config tab=4→3，connect_config tab=5→4
+    5. 全局函数 get_memberavatar() 移除 phpsso 逻辑
+    6. 清理所有语言包中 phpsso 相关键
+    7. linkfield 关联字段黑名单移除 6 张 sso 表
+    8. 前台模板头像兜底统一为 {IMG_PATH}member/nophoto.gif
+    9. 安装脚本（phpcms_db.sql）删除 6 张 sso 专用表、v9_member.phpssouid 字段与索引、
+       v9_menu 中 phpsso 主菜单与 sso_config 子菜单
+
 ### 版本：v9.7.2 (更新时间：2021-10-11 16:35)
 
     1. 后台上传插件由SWFUpload改为Webupload，支持HTML5文件上传
@@ -110,4 +124,4 @@
 
 
 【新版本后台界面】
-![新版phpcms后台界面](demo1001.png) 
+![新版phpcms后台界面](demo1001.png)

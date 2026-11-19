@@ -8,7 +8,7 @@
 		<div class="col-1 member-info">
 		<div class="content">
 			<div class="col-left himg">
-				<a title="{L('modify').L('avatar')}" href="index.php?m=member&c=index&a=account_manage_avatar&t=1"><img src="{$avatar[90]}" width="60" height="60" onerror="this.src='{$phpsso_api_url}/statics/images/member/nophoto.gif'"></a>
+				<a title="{L('modify').L('avatar')}" href="index.php?m=member&c=index&a=account_manage_avatar&t=1"><img src="{$avatar[90]}" width="60" height="60" onerror="this.src='{IMG_PATH}member/nophoto.gif'"></a>
 			</div>
 			<div class="col-auto">
 				<h5>{if $memberinfo['vip']}<img src="{IMG_PATH}icon/vip.gif">{elseif $memberinfo['overduedate']}<img src="{IMG_PATH}icon/vip-expired.gif" title="{L('overdue')}，{L('overduedate')}：{format::date($memberinfo['overduedate'],1)}">{/if}

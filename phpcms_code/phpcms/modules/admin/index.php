@@ -134,11 +134,7 @@ class index extends admin {
 		param::set_cookie('admin_username','');
 		param::set_cookie('userid',0);
 		
-		//退出phpsso
-		$phpsso_api_url = pc_base::load_config('system', 'phpsso_api_url');
-		$phpsso_logout = '<script type="text/javascript" src="'.$phpsso_api_url.'/api.php?op=logout" reload="1"></script>';
-		
-		showmessage(L('logout_success').$phpsso_logout,'?m=admin&c=index&a=login');
+		showmessage(L('logout_success'),'?m=admin&c=index&a=login');
 	}
 	
 	//左侧菜单
