@@ -15,6 +15,19 @@
 >
 >登陆后台可以更改域名网址、密码
 
+## 安全配置参考
+
+### admin 模块 IP 白名单（可选，按需启用）
+在 `.htaccess` 的 `RewriteEngine On` 下方添加，限制只有指定 IP 才能访问后台模块：
+
+    # admin 模块 IP 白名单（开发参考，按需启用）
+    RewriteCond %{QUERY_STRING} (^|&)m=admin(&|$) [NC]
+    RewriteCond %{REMOTE_ADDR} !^你的IP地址$
+    RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1$
+    RewriteRule ^ - [R=403,L]
+
+> 将 `你的IP地址` 替换为开发/运维人员的固定公网 IP。注释符号 `#` 去掉即生效。
+
 ## 二、关联字段用法
 
 >比如在产品案例(表名：v9_product_case)中添加了使用产品字段(字段名：use_product)<br>

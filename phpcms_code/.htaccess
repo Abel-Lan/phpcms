@@ -1,5 +1,35 @@
 DirectoryIndex index.html index.php index.htm
 
+### 网站扫描拦截
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# 拦截空UA、UA为"-"、以及常见爬虫框架
+RewriteCond %{HTTP_USER_AGENT} ^-$ [OR]
+RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+RewriteCond %{HTTP_USER_AGENT} (Python|Java|Scrapy) [NC]
+RewriteRule ^ - [F,L]
+
+# admin 模块 IP 白名单
+#RewriteCond %{QUERY_STRING} (^|&)m=admin(&|$) [NC]
+#RewriteCond %{REMOTE_ADDR} !^你的IP地址$
+#RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1$
+#RewriteRule ^ - [F,L]
+
+# 拦截扫描器探测的敏感文件扩展名
+RewriteRule \.(asp|aspx|jsp|jspx|cer|cdx|asa|asmx|bak|old|swp|sql|env|ini|htaccess)$ - [F,L,NC]
+
+# 拦截扫描器探测的敏感路径
+RewriteRule (^|/)(phpcms|caches|install|\.git|\.svn|wp-login|wp-admin|wp-includes|phpmyadmin|console|shell|webshell|c99|r57)(/|$) - [F,L,NC]
+
+# PHP 白名单放行，其余全部拦截
+RewriteCond %{REQUEST_URI} !^/api\.php$
+RewriteCond %{REQUEST_URI} !^/index\.php$
+RewriteCond %{REQUEST_URI} !^/admin\.php$
+RewriteCond %{REQUEST_URI} !^/plugin\.php$
+RewriteRule \.php$ - [F,L,NC]
+</IfModule>
+
 ### activate mod_expires
 <IfModule mod_expires.c>
 ExpiresActive On
